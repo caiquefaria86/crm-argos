@@ -1,6 +1,6 @@
 /*
 * Mazer, Technology Innovations Bootstrap HTML5 Landing Page
-* 
+*
 * File: app.scss
 *
 * If you want to edit the components, just go to _variables.scss
@@ -9,7 +9,7 @@
 
 ====== TABLE OF CONTENTS =======
 1. Bootstrap & Variables Inside
-2. Bootstrap Components Override 
+2. Bootstrap Components Override
     2.1 Alert
     2.2 Avatar
     2.3 Badge
@@ -827,7 +827,7 @@
   font-weight: bold;
 }
 .sidebar-wrapper .sidebar-header img {
-  height: 1.2rem;
+  height: 4.2rem;
 }
 .sidebar-wrapper .sidebar-toggler.x {
   position: absolute;

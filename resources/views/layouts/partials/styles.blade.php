@@ -5,7 +5,6 @@
 <link rel="stylesheet" href="{{ asset('/vendors/perfect-scrollbar/perfect-scrollbar.css') }}">
 <link rel="stylesheet" href="{{ asset('/vendors/bootstrap-icons/bootstrap-icons.css') }}">
 <link rel="stylesheet" href="{{asset('vendors/fontawesome/all.min.css')}}">
-<link rel="stylesheet" href="{{asset('vendors/fontawesome/all.min.css')}}">
 <link rel="stylesheet" href="{{asset('vendors/sweetalert2/sweetalert2.min.css')}}">
 
 <!-- Styles -->

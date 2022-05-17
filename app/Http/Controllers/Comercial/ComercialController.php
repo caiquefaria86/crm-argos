@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Comercial;
 use App\Models\User;
 use App\Models\Budget;
 use App\Models\Contact;
+use App\Models\BudgetSent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,45 +18,48 @@ class ComercialController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $contacts = Contact::where('status', true)->get();
         $allUsers = User::all();
         $userId = Auth::user()->id;
+        $authUser = Auth::user();
 
         return view('comercial.painel',[
             'contacts' => $contacts,
             'allUsers' => $allUsers,
             'userId'   => $userId,
+            'authUser' => $authUser,
         ]);
+    }
+
+    public function addFilterSession(Request $request)
+    {
+        if(!empty($request->all())){
+
+            $time = $request->selectTime;
+            session()->put('selectTime', $time);
+            // return redirect()->back();
+        }
+            return view('comercial.painel',[
+                'minhaSessao' => 'sessão criada com sucesso'
+            ]);
+
     }
 
     public function reloadContacts()
     {
-        $idUser = Auth::user()->id;
+        $contacts = $this->queryContactLists('contacts');
 
-        $contacts = Contact::where('user_id', $idUser)
-                                ->where('status', true)
-                                ->where('list', 'contacts')->get();
+        $budgets = $this->queryContactLists('requestBudget');
 
+        $budgetsSents = $this->queryContactLists('budgetSent');
 
-        $budgets = Contact::where('user_id', $idUser)
-                                ->where('list', 'requestBudget')
-                                ->where('status', true)
-                                ->get();
+        $recontact = $this->queryContactLists('recontact');
 
-        $budgetsSents = Contact::where('user_id', $idUser)
-                                ->where('list', 'budgetSent')
-                                ->where('status', true)
-                                ->get();
+        $negotiations = $this->queryContactLists('negotiation');
 
-        $recontact = Contact::where('user_id', $idUser)
-                                ->where('list', 'recontact')
-                                ->where('status', true)
-                                ->get();
-
-
-
+        $salecompleted = $this->queryContactLists('salecompleted');
 
         return response()->json([
             'success'       => true,
@@ -62,72 +67,176 @@ class ComercialController extends Controller
             'budgets'       => $budgets,
             'budgetSent'    => $budgetsSents,
             'recontact'     => $recontact,
+            'negotiations'  => $negotiations,
+            'salecompleted' => $salecompleted
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    static function queryContactLists($list)
     {
-        //
+
+        $contacts = Contact::Join('contact_user', function ($join) {
+
+            $join->on('contact_user.contact_id', '=', 'contacts.id')
+            ->where('contact_user.user_id', '=', Auth::user()->id)
+            ->orwhere('contacts.user_id', '=', Auth::user()->id);
+       })
+       ->distinct()
+       ->where('list', $list)
+       ->where('status', true)
+       ->select('contacts.id','contacts.name')
+       ->with('tags','comments')
+       ->get();
+
+       return $contacts;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    static function queryContactListsFilter($list)
     {
-        //
+        $contacts = Contact::distinct()
+       ->where('list', $list)
+       ->where('status', true)
+       ->select('contacts.id','contacts.name')
+       ->with('tags','comments');
+
+       return $contacts;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+
+
+    public function searchContacts(Request $request)
     {
-        //
+
+        $contacts = Contact::Join('contact_user', function ($join) {
+
+            $join->on('contact_user.contact_id', '=', 'contacts.id')
+            ->where('contact_user.user_id', '=', Auth::user()->id)
+            ->orwhere('contacts.user_id', '=', Auth::user()->id);
+       })
+       ->distinct()
+       ->where('status', true)
+       ->where('name', 'LIKE', "%{$request->contactSearch}%")
+       ->select('contacts.id','contacts.name')
+       ->with('tags','comments')
+       ->get();
+
+       return response()->json([
+        'success'       => true,
+        'contacts'      => $contacts
+    ]);
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function reportIndex($mes = null, $ano = null)
     {
-        //
+        if (!empty($mes)){
+
+            $nameMonth = $this->returnMonth($mes);
+        } else{
+            $mes = date('m');
+            $nameMonth = $this->returnMonth($mes);
+        }
+        if (empty($ano)) {
+            $ano = date('Y');
+        }
+
+        $totalContacts = Contact::whereMonth('created_at', $mes)->whereYear('created_at', $ano)->count();
+
+        $totalOrcSents = BudgetSent::whereMonth('date_apresentation', $mes)
+                                    ->whereYear('date_apresentation', $ano)
+                                    ->count();
+
+        $totalNegociation = Contact::where('status', true)
+                                    ->where('list', 'negotiation')
+                                    ->count();
+
+        $totalSaleCompleted = Contact::where('status', true)
+                                    ->where('list', 'salecompleted')
+                                    ->whereMonth('created_at', $mes)
+                                    ->whereYear('created_at', $ano)
+                                    ->count();
+
+        $chartContactDiaries = $this->returnDataChartDiaries($mes, $ano);
+
+        // dd($chartContactDiaries);
+
+
+
+        return view('comercial.report',[
+            'mes'                   => $nameMonth,
+            'ano'                   => $ano,
+            'totalContacts'         => $totalContacts,
+            'totalOrcSents'         => $totalOrcSents,
+            'totalNegociation'      => $totalNegociation,
+            'totalSaleCompleted'    => $totalSaleCompleted,
+            'chartContactDiaries'   => $chartContactDiaries
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    private function returnDataChartDiaries($mes, $ano)
     {
-        //
+        $dataChartContactsDiaries = [];
+
+        for($i = 1; $i < 32; $i++){
+
+            $dateSearch = $ano."/".$mes."/".$i;
+            $totalDia = Contact::whereDate('created_at', $dateSearch)->count();
+
+            $dataChartContactsDiaries[$i] = $totalDia;
+
+        }
+        return $dataChartContactsDiaries;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    private function returnMonth($mesNumber)
     {
-        //
+        switch ($mesNumber) {
+            case '01':
+                $name = "Janeiro";
+                break;
+            case '02':
+                $name = "Fevereiro";
+                break;
+            case '03':
+                $name = "Março";
+                break;
+            case '04':
+                $name = "Abril";
+                break;
+            case '05':
+                $name = "Maio";
+                break;
+            case '06':
+                $name = "Junho";
+                break;
+            case '07':
+                $name = "Julho";
+                break;
+            case '08':
+                $name = "Agosto";
+                break;
+            case '09':
+                $name = "Setembro";
+                break;
+            case '10':
+                $name = "Outubro";
+                break;
+            case '11':
+                $name = "Novembro";
+                break;
+            case '12':
+                $name = "Dezembro";
+                break;
+
+            default:
+                $name = "Mes invalido";
+                break;
+        }
+
+        return $name;
     }
+
+
+
 }

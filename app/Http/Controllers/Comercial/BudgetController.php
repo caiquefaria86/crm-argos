@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Comercial;
 use App\Models\Budget;
 use App\Models\Contact;
 use App\Models\BudgetSent;
+use App\Models\BudgetFiles;
 use Illuminate\Http\Request;
 use App\Models\BudgetSentFiles;
 use Illuminate\Support\Facades\DB;
@@ -16,14 +17,41 @@ class BudgetController extends Controller
     {
         try {
 
+
+            // $request =  $request->all();
+
+            // contactId: "10"
+            // description: "ddddddddddddd"
+            // mediakwh: null
+            // mediavalor: null
+            // "options_outlined": "conta-energia"
+            // tipoTelhado: "Colonial"
+            // uploadArquivos: Array(3) [ {}, {}, {} ]
+
             $budget = New Budget();
-            $budget->contact_id = $request->contact_id;
-            $budget->roof_type  = $request->roof_type;
-            $budget->budget_type = $request->budget_type;
-            $budget->conta_energia = $request->conta_energia;
-            $budget->media_kwh     = $request->media_kwh;
-            $budget->media_valor   = $request->media_valor;
+            $budget->contact_id = $request['contactId'];
+            $budget->roof_type  = $request['tipoTelhado'];
+            $budget->budget_type = $request['options_outlined'];
+            $budget->description = $request['description'];
+            $budget->media_kwh     = $request['mediakwh'];
+            $budget->media_valor   = $request['mediavalor'];
             $budget->save();
+
+            // CRIAR O BANCO DE DADOS PARA SALVAR OS DADOS DOS ARQUIVOS E CONCLUIR
+
+            if(isset($request['uploadArquivos'])){
+
+                for($i = 0; $i < count($request->allFiles()['uploadArquivos']); $i++){
+                    $file = $request->allFiles()['uploadArquivos'][$i];
+
+                    $budgetFiles = new BudgetFiles();
+                    $budgetFiles->budget_id = $budget->id;
+                    $budgetFiles->path = $file->store('contaEnergiaFilesContacts/'.$budget->id);
+                    $budgetFiles->save();
+                    unset($budgetFiles);
+
+                }
+            }
 
             $contact = Contact::find($budget->contact_id);
             $contact->list = 'requestBudget';
@@ -33,12 +61,14 @@ class BudgetController extends Controller
 
             return response()->json([
                 'success' => true,
-                'orcamento'    => $request->all()
+                'request' => $request
+                // 'orcamento'    => $request->all()
             ]);
 
         } catch (\response $r) {
             return response()->json([
                 'success' => false,
+
                 'message' => 'Erro ao solicitar o orcamento'
             ]);
         }

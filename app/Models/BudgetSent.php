@@ -23,6 +23,6 @@ class budgetSent extends Model
 
     public function budgetSentFiles()
     {
-        return $this->hasMany(BudgetSentFiles::class);
+        return $this->hasMany(BudgetSentFiles::class, 'budget_sent', 'id');
     }
 }

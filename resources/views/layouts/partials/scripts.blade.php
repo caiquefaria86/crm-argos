@@ -2,9 +2,9 @@
 
 <script src="{{ asset('/vendors/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
 <script src="{{ asset('/vendors/tinymce/tinymce.min.js') }}"></script>
-<script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc" crossorigin="anonymous"></script>
-<script src="{{asset('js/extensions/sweetalert2.js')}}"></script>
+<script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
 <script src="{{asset('vendors/sweetalert2/sweetalert2.all.min.js')}}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 @if (Session::has('success'))
     <script>
