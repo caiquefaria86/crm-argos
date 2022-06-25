@@ -14,7 +14,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-body">
-                            <form class="form" method="POST" action="{{route('comercial.client.store')}}">
+                            <form class="form" method="POST" action="{{route('comercial.client.store')}}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-6 col-12">
@@ -120,13 +120,18 @@
                                                 name="origin" value="{{$contact->origin}}" disabled>
                                         </div>
                                     </div>
+                                    <h4 class="mt-5">Arquivos Obrigatórios</h4>
+                                    <hr>
                                     <div class="col-md-6 col-12">
                                         <div class="form-group">
-                                            <label for="estado">Escritório Responsável</label>
-                                                <select name="responsibleOffice" class="form-select" id="estado">
-                                                    <option value="Escritorio Rio Preto">São José do Rio Preto (sede)</option>
-                                                    <option value="Escritorio Ouroeste">Ouroeste</option>
-                                                </select>
+                                            <label for="company-column">CHN / Similar</label>
+                                            <input type="file" id="cnh-cliente" class="form-control" name="cnh-cliente[]" multiple>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="company-column">Comprovante Residencia</label>
+                                            <input type="file" id="cnh-cliente" class="form-control" name="compResidencia[]" multiple>
                                         </div>
                                     </div>
 

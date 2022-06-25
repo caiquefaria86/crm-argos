@@ -29,10 +29,12 @@
                 if(( $intervalo->h == 0 )&&( $intervalo->i < 60)){
                     $mensagem = "Há ".$intervalo->i. " minuto(s)" ;
                     return $mensagem;
+                }elseif (( $intervalo->h > 0 )&&( $intervalo->d < 1)) {
+                    # code...
+                    $mensagem = "Há ".$intervalo->h. " horas" ;
+                    return $mensagem;
                 }
 
-                $mensagem = "Há ".$intervalo->h. " horas" ;
-                return $mensagem;
             }
 
             $mensagem = $data1->format('d')." de ".$data1->format('M')." às ".$data1->format('H:i');

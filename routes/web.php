@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Admin\UsersController;
@@ -30,6 +31,9 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->get('/bemvindo', function () {
+    return view('bemvindo');
+})->name('bemvindo');
 
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
@@ -39,8 +43,13 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::get('/usuario/{id}/editar', [UsersController::class, 'edit'])->name('usuarios.edit');
         Route::put('/usuario/editar', [UsersController::class, 'update'])->name('usuarios.update');
         Route::get('/usuario/{id}/permissoes', [UsersController::class, 'editPermission'])->name('usuarios.editPermission');
+        Route::get('/etiquetas/grupos/', [TagController::class, 'allTags'])->name('tags.groups');
+        Route::get('/etiquetas/nova', [TagController::class, 'newTag'])->name('tags.new');
+        Route::post('/etiquetas/new', [TagController::class, 'store'])->name('tags.store');
+        Route::get('/etiqueta/{id}/editar', [TagController::class, 'edit'])->name('tags.edit');
+        Route::put('/etiqueta/update', [TagController::class, 'update'])->name('tags.update');
+        Route::delete('/etiqueta/{id}/destroy', [TagController::class, 'destroy'])->name('tags.destroy');
         Route::put('usuario/editarPermissoes', [UsersController::class, 'updatePermission'])->name('usuarios.updatePermission');
-
     });
 
     Route::post('/notifications/reload', [NotificationController::class, 'notifications'])->name('notification.reload');
@@ -61,6 +70,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::post('/contato/movecard', [ContactController::class, 'moveCard'])->name('contato.moveCard');
         Route::post('/contato/updatename', [ContactController::class, 'updateName'])->name('contato.updateName');
         Route::post('/contato/checklistStore', [ContactController::class, 'checklistStore'])->name('contato.checklistStore');
+        Route::post('/contato/enviacnh', [ContactController::class, 'uploadFilesContact'])->name('contato.uploadFilesContact');
+        Route::post('/contato/updateDateRecontact', [ContactController::class, 'updateDateRecontact'])->name('contato.updateDateRecontact');
+
 
         Route::post('/contato/addComment', [CommentController::class, 'store'])->name('contato.comment.store');
         Route::post('/contato/deleteComment', [CommentController::class, 'destroy'])->name('contato.comment.destroy');
@@ -72,8 +84,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
 
         Route::post('/comercial/search', [ComercialController::class, 'searchContacts'])->name('search');
 
-        Route::get('/cliente/novo/{contact_id?}', [ClientController::class, 'createClient'])->name('client.new');
+        Route::get('/cliente/novo/{contact_id?}/{checkContact?}', [ClientController::class, 'createClient'])->name('client.new');
         Route::get('/cliente/{id}/ver', [ClientController::class, 'show'])->name('client.show');
+        Route::get('/clientes/todos', [ClientController::class, 'index'])->name('client.index');
         Route::post('/cliente/new', [ClientController::class, 'store'])->name('client.store');
 
         Route::get('/projeto/{client_id}/novo', [ProjectController::class, 'projectNew'])->name('project.new');

@@ -37,8 +37,6 @@ class BudgetController extends Controller
             $budget->media_valor   = $request['mediavalor'];
             $budget->save();
 
-            // CRIAR O BANCO DE DADOS PARA SALVAR OS DADOS DOS ARQUIVOS E CONCLUIR
-
             if(isset($request['uploadArquivos'])){
 
                 for($i = 0; $i < count($request->allFiles()['uploadArquivos']); $i++){
@@ -46,12 +44,14 @@ class BudgetController extends Controller
 
                     $budgetFiles = new BudgetFiles();
                     $budgetFiles->budget_id = $budget->id;
-                    $budgetFiles->path = $file->store('contaEnergiaFilesContacts/'.$budget->id);
+                    $budgetFiles->path = $file->store('contactsFiles/'.$budget->contact_id.'/contaEnergia/'.$budget->id);
                     $budgetFiles->save();
                     unset($budgetFiles);
 
                 }
             }
+
+            // SQLSTATE[HY000]: General error: 1364 Field 'conta_energia' doesn't have a default value (SQL: insert into `budgets` (`contact_id`, `roof_type`, `budget_type`, `description`, `media_kwh`, `media_valor`, `updated_at`, `created_at`) values (2, Metalico, media-valor, adasdasd123, ?, 123, 2022-06-20 21:00:14, 2022-06-20 21:00:14))
 
             $contact = Contact::find($budget->contact_id);
             $contact->list = 'requestBudget';
@@ -96,16 +96,22 @@ class BudgetController extends Controller
 
             $budgetSentFiles = new BudgetSentFiles();
             $budgetSentFiles->budget_sent = $budgetSent->id;
-            $budgetSentFiles->path = $file->store('budgetsSentFiles/'.$budgetSent->id);
+            $budgetSentFiles->path = $file->store('contactsFiles/'.$budgetSent->contactId.'/budgetsSentsFiles/'.$budgetSent->id);
             $budgetSentFiles->save();
             unset($budgetSentFiles);
         }
 
+        $hoje = date('Y-m-d');
+        $finalDate = date('Y-m-d', strtotime('+3 days', strtotime($hoje)));
+
+
         $contactAffeted = DB::table('contacts')
               ->where('id', $request->contactId)
               ->update([
-                  'list' => 'budgetSent'
+                    'list' => 'budgetSent',
+                    'date_recontact' => $finalDate
                 ]);
+
         $budgetAffeted = DB::table('budgets')
               ->where('contact_id', $request->contactId)
               ->update([

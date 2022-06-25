@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Client;
+use App\Models\Beneficiary;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Project extends Model
 {
@@ -24,4 +26,14 @@ class Project extends Model
         'status',
         'client_id'
     ];
+
+    public function beneficiaries()
+    {
+        return $this->hasMany(Beneficiary::class);
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 }

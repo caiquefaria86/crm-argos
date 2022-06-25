@@ -11,13 +11,13 @@ Flexbox is used as a fallback so that browsers which don't support grid will sti
 
 /* Masthead */
 
+
 .lists-container::-webkit-scrollbar {
-    height: 2.4rem;
+    height: 0.7rem;
 }
 
 .lists-container::-webkit-scrollbar-thumb {
-    background-color: #66a3c7;
-    border: 0.8rem solid #0079bf;
+    background-color: #5c5c5c;
     border-top-width: 0;
 }
 
@@ -346,6 +346,16 @@ textarea {
 
   .text-riscadinho{
     text-decoration: line-through;
+  }
+
+  .item-project{
+      color:#a7a7a7;
+      padding: 3px;
+  }
+  .value-project{
+      color: rgb(77, 77, 77);
+      font-weight: bold;
+      font-size: large;
   }
 
 

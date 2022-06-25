@@ -28,9 +28,11 @@
                 {{$mes}} / {{$ano}}
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Option 1</a>
-                <a class="dropdown-item" href="#">Option 2</a>
-                <a class="dropdown-item" href="#">Option 3</a>
+                <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '06', 'ano'=> '2022'])}}">Junho / 2022</a>
+                <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '05', 'ano'=> '2022'])}}">Maio / 2022</a>
+                <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '04', 'ano'=> '2022'])}}">Abril / 2022</a>
+                <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '03', 'ano'=> '2022'])}}">Março / 2022</a>
+                <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '02', 'ano'=> '2022'])}}">Fevereiro / 2022</a>
             </div>
         </div>
     </div>
@@ -49,7 +51,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">R$ Total</h6>
-                                        <h6 class="font-extrabold mb-0">445.223,00</h6>
+                                        <h6 class="font-extrabold mb-0">{{number_format($totalSalesMouth, 2, ',', '.');}}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +68,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">R$ Instal.</h6>
-                                        <h6 class="font-extrabold mb-0">115.452,00</h6>
+                                        <h6 class="font-extrabold mb-0">{{number_format($totalValorInstMouth, 2, ',', '.');}}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -83,7 +85,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">% Fecham.</h6>
-                                        <h6 class="font-extrabold mb-0">15%</h6>
+                                        <h6 class="font-extrabold mb-0">{{number_format($porcSales, 2, ',', '.');}}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +102,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">T. Médio</h6>
-                                        <h6 class="font-extrabold mb-0">23.504,00</h6>
+                                        <h6 class="font-extrabold mb-0">{{number_format($ticketMedio, 2, ',', '.');}}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +172,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <h6 class="text-muted font-semibold">Projetos Fechados</h6>
-                                        <h6 class="font-extrabold mb-0">{{$totalSaleCompleted}}</h6>
+                                        <h6 class="font-extrabold mb-0">{{$qtdProjectSales}}</h6>
                                     </div>
                                 </div>
                             </div>
@@ -193,7 +195,7 @@
                     <div class="col-12 col-xl-4">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Profile Visit</h4>
+                                <h4>Desempenho por pessoa</h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -204,16 +206,17 @@
                                                 <use
                                                     xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                             </svg>
-                                            <h5 class="mb-0 ms-3">Europe</h5>
+                                            <h5 class="mb-0 ms-3">Pamela</h5>
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <h5 class="mb-0">862</h5>
+                                        <h5 class="mb-0">45</h5>
                                     </div>
                                     <div class="col-12">
                                         <div id="chart-europe"></div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="d-flex align-items-center">
@@ -222,16 +225,18 @@
                                                 <use
                                                     xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                             </svg>
-                                            <h5 class="mb-0 ms-3">America</h5>
+                                            <h5 class="mb-0 ms-3">Douglas</h5>
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <h5 class="mb-0">375</h5>
+                                        <h5 class="mb-0">65</h5>
                                     </div>
                                     <div class="col-12">
                                         <div id="chart-america"></div>
                                     </div>
                                 </div>
+
+
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="d-flex align-items-center">
@@ -240,11 +245,11 @@
                                                 <use
                                                     xlink:href="assets/vendors/bootstrap-icons/bootstrap-icons.svg#circle-fill" />
                                             </svg>
-                                            <h5 class="mb-0 ms-3">Indonesia</h5>
+                                            <h5 class="mb-0 ms-3">Suelen</h5>
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <h5 class="mb-0">1025</h5>
+                                        <h5 class="mb-0">64</h5>
                                     </div>
                                     <div class="col-12">
                                         <div id="chart-indonesia"></div>
@@ -256,45 +261,30 @@
                     <div class="col-12 col-xl-8">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Latest Comments</h4>
+                                <h4>Útimos Clientes | <a href="{{route('comercial.client.index')}}">Ver Todos</a></h4>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-lg">
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Comment</th>
+                                                <th>Nome</th>
+                                                <th>Cidade</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach ($lastClients as $client)
                                             <tr>
                                                 <td class="col-3">
                                                     <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img src="assets/images/faces/5.jpg">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Si Cantik</p>
+                                                        <p class="font-bold ms-3 mb-0">{{$client->name}}</p>
                                                     </div>
                                                 </td>
                                                 <td class="col-auto">
-                                                    <p class=" mb-0">Congratulations on your graduation!</p>
+                                                    <p class=" mb-0">{{$client->cidade}}</p>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td class="col-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="avatar avatar-md">
-                                                            <img src="assets/images/faces/2.jpg">
-                                                        </div>
-                                                        <p class="font-bold ms-3 mb-0">Si Ganteng</p>
-                                                    </div>
-                                                </td>
-                                                <td class="col-auto">
-                                                    <p class=" mb-0">Wow amazing design! Can you make another tutorial for
-                                                        this design?</p>
-                                                </td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -307,8 +297,8 @@
                 <div class="card">
                     <div class="card-body py-4 px-5">
                         <div class="d-flex align-items-center">
-                            <div class="avatar avatar-xl">
-                                <img src="assets/images/faces/1.jpg" alt="Face 1">
+                            <div class="avatar bg-danger me-3">
+                                <span class="avatar-content">PC</span>
                             </div>
                             <div class="ms-3 name">
                                 <h5 class="font-bold">1º Vendas</h5>
@@ -317,7 +307,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-header">
                         <h4>Recent Messages</h4>
                     </div>
@@ -354,7 +344,7 @@
                                 Conversation</button>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="card">
                     <div class="card-header">
                         <h4>% de Pessoas</h4>

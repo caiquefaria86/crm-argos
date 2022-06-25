@@ -46,7 +46,6 @@
             <p class="text-gray-600">Você não tem conta? <a href="{{route('register')}}" class="font-bold">Cadastrar</a>.</p>
             @endif
 
-
             @if (Route::has('password.request'))
             <p><a class="font-bold" href="{{route('password.request')}}">Esqueceu a senha?</a>.</p>
             @endif

@@ -8,6 +8,7 @@ use App\Models\Comment;
 use App\Models\BudgetSent;
 use App\Models\tagContacts;
 use App\Models\TargetPeople;
+use App\Models\UploadFileContact;
 use Illuminate\Database\Eloquent\Model;
 use phpDocumentor\Reflection\DocBlock\Tag;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -56,12 +57,17 @@ class Contact extends Model
 
     public function targetPeoples()
     {
-        return $this->hasMany(TargetPeople::class);
+        return $this->hasMany(TargetPeople::class, 'contact_id', 'id');
     }
 
     public function users()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function uploadFile()
+    {
+        return $this->hasMany(UploadFileContact::class);
     }
 
 }

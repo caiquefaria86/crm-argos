@@ -3,9 +3,9 @@
     <!-- Add Sidebar Menu Items Here -->
 
     <li class="sidebar-item ">
-        <a href="{{route('dashboard')}}" class='sidebar-link'>
+        <a href="{{route('bemvindo')}}" class='sidebar-link'>
             <i class="bi bi-grid-fill"></i>
-            <span>Dashboard</span>
+            <span>Bem Vindo</span>
         </a>
     </li>
 
@@ -13,19 +13,12 @@
 
         <li class="sidebar-title">Comercial</li>
 
-        <li class="sidebar-item  ">
-            <a href="#" class='sidebar-link'>
-                <span class="fa-fw select-all fas"></span>
-                <span>Relatório</span>
-            </a>
-        </li>
-
-        <li class="sidebar-item  ">
+        {{-- <li class="sidebar-item  ">
             <a href="{{route('comercial.contato.index')}}" class='sidebar-link'>
                 <span class="fa-fw select-all fas"></span>
                 <span>Dados</span>
             </a>
-        </li>
+        </li> --}}
 
         <li class="sidebar-item  ">
             <a href="{{route('comercial.painel')}}" class='sidebar-link'>
@@ -35,34 +28,39 @@
         </li>
 
         <li class="sidebar-item  ">
-            <a href="#" class='sidebar-link'>
-                <span class="fa-fw select-all fas"></span>
+            <a href="{{route('comercial.client.index')}}" class='sidebar-link'>
+                <span class="fa-fw select-all fas"></span>
                 <span>Clientes</span>
             </a>
         </li>
 
         @if (Auth::user()->admin)
+
+            <li class="sidebar-item  ">
+                <a href="{{route('comercial.report')}}" class='sidebar-link'>
+                    <span class="fa-fw select-all fas"></span>
+                    <span>Relatório</span>
+                </a>
+            </li>
             <li class="sidebar-item  has-sub">
-            <a href="#" class='sidebar-link'>
-                <i class="bi bi-hexagon-fill"></i>
-                <span>Administração</span>
-            </a>
-            <ul class="submenu">
-                <li class="submenu-item ">
-                    <a href="#">Usuários / Permissões</a>
-                </li>
-                <li class="submenu-item ">
-                    <a href="#">Etiquetas (Tags)</a>
-                </li>
-                <li class="submenu-item ">
-                    <a href="#">CheckLists</a>
-                </li>
-            </ul>
-
-
+                <a href="#" class='sidebar-link'>
+                    <span class="fa-fw select-all fas"></span>
+                    <span>Administração</span>
+                </a>
+                <ul class="submenu">
+                    <li class="submenu-item ">
+                        <a href="{{route('admin.usuarios')}}">Usuários / Permissões</a>
+                    </li>
+                    <li class="submenu-item ">
+                        <a href="{{route('admin.tags.groups')}}">Etiquetas (Tags)</a>
+                    </li>
+                    <li class="submenu-item ">
+                        <a href="#">CheckLists</a>
+                    </li>
+                </ul>
+            </li>
 
         @endif
-    </li>
 
     @endif
 

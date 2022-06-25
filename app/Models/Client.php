@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Project;
+use App\Models\UploadFiles;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Client extends Model
 {
@@ -22,8 +24,17 @@ class Client extends Model
     'cellphone',
     'email',
     'origin',
-    'responsibleOffice',
     'contact_id'
     ];
+
+    public function uploadFiles()
+    {
+        $this->hasMany(UploadFiles::class);
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 
 }

@@ -22,8 +22,18 @@ class ContactFactory extends Factory
      */
     public function definition()
     {
-        Contact::factory()
-        ->hasUser(3)
-        ->create();
+        return [
+            //  user_id 	status 	list 	name 	cellphone 	city 	email 	origin 	responsible_id 	responsibleOffice
+            'user_id' => 1,
+            'status' => 1,
+            'list'  => 'contacts',
+            'name' => $this->faker->name,
+            'cellphone' => $this->faker->buildingNumber,
+            'city'  => $this->faker->name,
+            'email' => $this->faker->unique()->safeEmail,
+            'origin' => 'Parceria Terceiros',
+            'responsible_id' => 1,
+            'responsibleOffice' => "Rio Preto",
+        ];
     }
 }

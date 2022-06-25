@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Comercial;
 use App\Models\Tag;
 use App\Models\tagContacts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class TagContactController extends Controller

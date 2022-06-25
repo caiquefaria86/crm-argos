@@ -9,6 +9,7 @@ use \App\Models\Contact;
 use App\Models\Checklist;
 use Illuminate\Http\Request;
 use App\Models\ChecklistItems;
+use App\Models\UploadFileContact;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -80,13 +81,13 @@ class ContactController extends Controller
         return;
     }
 
-
     public function dataModal(Request $request)
     {
 
         $contactId = $request->items;
 
         $data = Contact::find($contactId);
+
 
         $tags = Tag::all();
 
@@ -103,6 +104,8 @@ class ContactController extends Controller
                                         ->where('checklistGroup_id', 1)
                                         ->get();
 
+        $uploadFiles = UploadFileContact::where('contact_id', $contactId)->get();
+
         // return response()->json([
         //     'success'   =>  true,
         //     'data'      =>  $data
@@ -118,7 +121,8 @@ class ContactController extends Controller
             'checklistItems' => $checklistItems,
             'allUsers'       => $allUsers,
             'authUser'       => $authUser,
-            'checklistContacts'  => $checklistContacts
+            'checklistContacts'  => $checklistContacts,
+            'uploadFiles'    => $uploadFiles
 
             ])->render();
 
@@ -127,20 +131,64 @@ class ContactController extends Controller
             'html'              => $viewRender,
             'budgetsContact'    => $budgetsContact,
             'checklistItems'    =>$checklistItems,
-            'checklistContacts'  => $checklistContacts
+            'checklistContacts'  => $checklistContacts,
+            'uploadFiles'       =>$uploadFiles
         ));
+    }
+
+    public function updateDateRecontact(Request $request)
+    {
+        $dateRecontact = $request->date_recontact;
+        $contactId = $request->id_contact;
+        $hoje = date('Y-m-d');
+
+        if(strtotime($dateRecontact) < strtotime($hoje)){
+            return response()->json([
+                'success' => false,
+                'message'=>'A data de recontactar, não pode ser um dia que já passou!'
+            ]);
+        }
+
+        $contactAffeted = DB::table('contacts')
+            ->where('id', $contactId)
+            ->update([
+                'date_recontact' => $dateRecontact
+              ]);
+
+            return response()->json([
+                'success' => true,
+                'message'=>'Data Alterada com Sucesso!'
+            ]);
+
     }
 
     public function moveCard(Request $request)
     {
         $destination = $request->destination;
 
+        if($destination == "budgetSent"){
+            // atualiza a data de passar pro recontactar
+            $hoje = date('Y-m-d');
+            $finalDate = date('Y-m-d', strtotime('+3 days', strtotime($hoje)));
+
+            $contactAffeted = DB::table('contacts')
+            ->where('id', $request->contact_id)
+            ->update([
+                'list' => $destination,
+                'date_recontact' => $finalDate
+              ]);
+
+            return response()->json([
+                'success' => 'Movido com success'
+            ]);
+
+        }
+
         $contactAffeted = DB::table('contacts')
               ->where('id', $request->contact_id)
               ->update([
                   'list' => $destination
                 ]);
-
 
         return response()->json([
             'success' => 'Movido com success'
@@ -234,6 +282,41 @@ class ContactController extends Controller
                 'error'   => $th
             ]);
 
+        }
+    }
+
+    public function uploadFilesContact(Request $request)
+    {
+        try {
+
+            $tipo = $request['type'];
+
+            for($i = 0; $i < count($request->allFiles()[$tipo]); $i++){
+                $file = $request->allFiles()[$tipo][$i];
+
+                $uploadFile = new UploadFileContact();
+                $uploadFile->type = $request['type'];
+                $uploadFile->contact_id = $request['contact_id'];
+                $uploadFile->path = $file->store('contactsFiles/'.$uploadFile->contact_id.'/docs/');
+                $uploadFile->save();
+                // unset($uploadFile);
+
+            }
+
+            return response()->json([
+                'success' => true,
+                'request' => $request->all(),
+                'uploadFiles' => $uploadFile,
+                'message' => 'Salvo com sucesso!'
+            ]);
+
+        } catch (\Throwable $th) {
+            throw $th;
+
+            return response()->json([
+                'success' => false,
+                'message' => $th
+            ]);
         }
     }
 

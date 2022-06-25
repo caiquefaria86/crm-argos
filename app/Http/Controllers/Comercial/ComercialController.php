@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Comercial;
 
 use App\Models\User;
 use App\Models\Budget;
+use App\Models\Client;
 use App\Models\Contact;
+use App\Models\Project;
 use App\Models\BudgetSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -159,9 +161,41 @@ class ComercialController extends Controller
 
         $chartContactDiaries = $this->returnDataChartDiaries($mes, $ano);
 
-        // dd($chartContactDiaries);
+        $totalSalesMouth = Project::whereMonth('data_fechamento', $mes)
+                                        ->whereYear('data_fechamento', $ano)
+                                        ->get();
 
 
+        // totais de R$
+        $totalValorSalesMouth = 0;
+        $totalValorInstMouth = 0;
+        $totalValorMaterMouth = 0;
+        foreach ($totalSalesMouth as $key => $sale) {
+            $totalValorSalesMouth = $totalValorSalesMouth + $sale->valor_total;
+            $totalValorInstMouth = $totalValorInstMouth + $sale->valor_instalacao;
+            $totalValorMaterMouth = $totalValorMaterMouth + $sale->valor_material;
+        }
+
+        // % de fechaento
+        // var_dump($totalContacts);
+        if($totalContacts !== 0){
+            $porcSales = ((count($totalSalesMouth))*100)/$totalContacts;
+        }else{
+            $porcSales = 0;
+        }
+
+        $qtdProjectSales =count($totalSalesMouth);
+
+        if($qtdProjectSales != 0){
+            $ticketMedio = $totalValorSalesMouth / $qtdProjectSales ;
+        }else{
+            $ticketMedio = 0;
+        }
+
+        $lastClients = Client::orderBy('created_at', 'desc')->limit(5)->get();
+
+
+        // dd($porcSales);
 
         return view('comercial.report',[
             'mes'                   => $nameMonth,
@@ -170,7 +204,14 @@ class ComercialController extends Controller
             'totalOrcSents'         => $totalOrcSents,
             'totalNegociation'      => $totalNegociation,
             'totalSaleCompleted'    => $totalSaleCompleted,
-            'chartContactDiaries'   => $chartContactDiaries
+            'chartContactDiaries'   => $chartContactDiaries,
+            'totalSalesMouth'       => $totalValorSalesMouth,
+            'totalValorInstMouth'   => $totalValorInstMouth,
+            'totalValorMaterMouth'  => $totalValorMaterMouth,
+            'porcSales'             => $porcSales,
+            'qtdProjectSales'      => $qtdProjectSales,
+            'ticketMedio'          => $ticketMedio,
+            'lastClients'          => $lastClients
         ]);
     }
 

@@ -15,7 +15,7 @@
 
         <script src="{{ asset('vendors/toastify/toastify.js') }}"></script>
     @endsection
-    <form action="{{route('comercial.painel')}}" method="GET" name="formFilterCards">
+    {{-- <form action="{{route('comercial.painel')}}" method="GET" name="formFilterCards">
     @csrf
     <div class="d-flex flex-row align-items-end mb-5 border rounded">
         <div class="p-2">
@@ -28,7 +28,7 @@
                         @if(($user->commercial == true)&&($user->id != $authUser->id))
                             <option value="{{$user->id}}">{{$user->name}}</option>
                         @endif
-                    @endforeach --}}
+                    @endforeach
                 </select>
                 <label class="input-group-text" for="selectCards">Cards</label>
             </div>
@@ -42,7 +42,7 @@
                     <option value="mesAnterior">Mês Anterior</option>
                     <option value="esteAno">Este Ano</option>
                     <option value="anoAnterior">Ano Anterior</option>
-                    {{-- <option value="3">Periodo Personalizado</option> --}}
+                    {{-- <option value="3">Periodo Personalizado</option>
                 </select>
             </div>
         </div>
@@ -52,7 +52,7 @@
         <div class="p-2">
             <button class="btn btn-sm border " id="btnReloadAll"><span class="fa-fw select-all fas mx-1 my-1"></span></button>
         </div>
-    </form>
+    </form> --}}
         <div class="p-2 flex-grow-1 d-flex justify-content-end">
             <div class="input-group search">
                 <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
@@ -414,8 +414,11 @@
                         $('#list-contact').append("<div id='"+res.contacts[i].id+"' class='card-trello-contact' data_id='"+res.contacts[i].id+"'>"+ res.contacts[i].name +"</div>");
                         $("#"+res.contacts[i].id).prepend("<div id='list-tag-"+res.contacts[i].id+"' class='w-100 mb-2'></div>");
                         $('#'+res.contacts[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.contacts[i].id+'"></div>');
-                        $('#content-info-card-'+res.contacts[i].id).append('<div class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span>'+res.contacts[i].comments.length+'</div>');
-                        $('#content-info-card-'+res.contacts[i].id).append('<div class="text-muted mx-1">@ 4</div>');
+
+                        if (res.contacts[i].comments.length > 0) {
+                            $('#content-info-card-'+res.contacts[i].id).append('<div id="comment-'+res.contacts[i].id+'" class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span><span data-id="'+res.contacts[i].comments.length+'" id="comment-number-'+res.contacts[i].id+'">'+res.contacts[i].comments.length+'</span></div>');
+                        }
+                        // $('#content-info-card-'+res.contacts[i].id).append('<div class="text-muted mx-1"><span class="fa-fw select-all fas"></span></div>');
 
 
                         // console.log(res.contacts[i]);
@@ -451,10 +454,13 @@
                         // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
                         $('#list-presented').append("<div id='"+res.budgetSent[i].id+"' class='card-trello-budgetsent' data_id='"+res.budgetSent[i].id+"'>"+ res.budgetSent[i].name +"</div>");
                         $("#"+res.budgetSent[i].id).prepend("<div id='list-tag-"+res.budgetSent[i].id+"' class='w-100 mb-2'></div>");
-
                         $('#'+res.budgetSent[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.budgetSent[i].id+'"></div>');
-                        $('#content-info-card-'+res.budgetSent[i].id).append('<div class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span>'+res.budgetSent[i].comments.length+'</div>');
-                        $('#content-info-card-'+res.budgetSent[i].id).append('<div class="text-muted mx-1">@ 4</div>');
+
+                        if (res.budgetSent[i].comments.length > 0) {
+                            $('#content-info-card-'+res.budgetSent[i].id).append('<div id="comment-'+res.budgetSent[i].id+'" class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span><span data-id="'+res.budgetSent[i].comments.length+'" id="comment-number-'+res.budgetSent[i].id+'">'+res.budgetSent[i].comments.length+'</span></div>');
+                        }
+                        // $('#content-info-card-'+res.contacts[i].id).append('<div class="text-muted mx-1">@ 4</div>');
+
 
                         // console.log(res.contacts[i]);
                         for(var r = 0; r < res.budgetSent[i].tags.length ; r++){
@@ -489,10 +495,12 @@
                         // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
                         $('#list-recontact').append("<div id='"+res.recontact[i].id+"' class='card-trello-recontact' data_id='"+res.recontact[i].id+"'>"+ res.recontact[i].name +"</div>");
                         $("#"+res.recontact[i].id).prepend("<div id='list-tag-"+res.recontact[i].id+"' class='w-100 mb-2'></div>");
-
                         $('#'+res.recontact[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.recontact[i].id+'"></div>');
-                        $('#content-info-card-'+res.recontact[i].id).append('<div class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span>'+res.recontact[i].comments.length+'</div>');
-                        $('#content-info-card-'+res.recontact[i].id).append('<div class="text-muted mx-1">@ 4</div>');
+
+                        if (res.recontact[i].comments.length > 0) {
+                            $('#content-info-card-'+res.recontact[i].id).append('<div id="comment-'+res.recontact[i].id+'" class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span><span data-id="'+res.recontact[i].comments.length+'" id="comment-number-'+res.recontact[i].id+'">'+res.recontact[i].comments.length+'</span></div>');
+                        }
+                        // $('#content-info-card-'+res.contacts[i].id).append('<div class="text-muted mx-1">@ 4</div>');
 
                         // console.log(res.contacts[i]);
                         for(var r = 0; r < res.recontact[i].tags.length ; r++){
@@ -528,10 +536,12 @@
                         // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
                         $('#list-budget').append("<div id='"+res.budgets[i].id+"' class='card-trello-budget' data_id='"+res.budgets[i].id+"'>"+ res.budgets[i].name +"</div>");
                         $("#"+res.budgets[i].id).prepend("<div id='list-tag-"+res.budgets[i].id+"' class='w-100 mb-2'></div>");
-
                         $('#'+res.budgets[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.budgets[i].id+'"></div>');
-                        $('#content-info-card-'+res.budgets[i].id).append('<div class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span>'+res.budgets[i].comments.length+'</div>');
-                        $('#content-info-card-'+res.budgets[i].id).append('<div class="text-muted mx-1">@ 4</div>');
+
+                        if (res.budgets[i].comments.length > 0) {
+                            $('#content-info-card-'+res.budgets[i].id).append('<div id="comment-'+res.budgets[i].id+'" class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span><span data-id="'+res.budgets[i].comments.length+'" id="comment-number-'+res.budgets[i].id+'">'+res.budgets[i].comments.length+'</span></div>');
+                        }
+                        // $('#content-info-card-'+res.contacts[i].id).append('<div class="text-muted mx-1">@ 4</div>');
 
                         // console.log(res.contacts[i]);
                         for(var r = 0; r < res.budgets[i].tags.length ; r++){
@@ -566,10 +576,12 @@
                         // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
                         $('#list-negotiation').append("<div id='"+res.negotiations[i].id+"' class='card-trello-negotiation' data_id='"+res.negotiations[i].id+"'>"+ res.negotiations[i].name +"</div>");
                         $("#"+res.negotiations[i].id).prepend("<div id='list-tag-"+res.negotiations[i].id+"' class='w-100 mb-2'></div>");
-
                         $('#'+res.negotiations[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.negotiations[i].id+'"></div>');
-                        $('#content-info-card-'+res.negotiations[i].id).append('<div class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span>'+res.negotiations[i].comments.length+'</div>');
-                        $('#content-info-card-'+res.negotiations[i].id).append('<div class="text-muted mx-1">@ 4</div>');
+
+                        if (res.negotiations[i].comments.length > 0) {
+                            $('#content-info-card-'+res.negotiations[i].id).append('<div id="comment-'+res.negotiations[i].id+'" class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span><span data-id="'+res.negotiations[i].comments.length+'" id="comment-number-'+res.negotiations[i].id+'">'+res.negotiations[i].comments.length+'</span></div>');
+                        }
+                        // $('#content-info-card-'+res.contacts[i].id).append('<div class="text-muted mx-1">@ 4</div>');
 
                         // console.log(res.contacts[i]);
                         for(var r = 0; r < res.negotiations[i].tags.length ; r++){
@@ -604,10 +616,12 @@
                         // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
                         $('#list-SaleCompleted').append("<div id='"+res.salecompleted[i].id+"' class='card-trello-salecompleted' data_id='"+res.salecompleted[i].id+"'>"+ res.salecompleted[i].name +"</div>");
                         $("#"+res.salecompleted[i].id).prepend("<div id='list-tag-"+res.salecompleted[i].id+"' class='w-100 mb-2'></div>");
-
                         $('#'+res.salecompleted[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.salecompleted[i].id+'"></div>');
-                        $('#content-info-card-'+res.salecompleted[i].id).append('<div class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span>'+res.salecompleted[i].comments.length+'</div>');
-                        $('#content-info-card-'+res.salecompleted[i].id).append('<div class="text-muted mx-1">@ 4</div>');
+
+                        if (res.salecompleted[i].comments.length > 0) {
+                            $('#content-info-card-'+res.salecompleted[i].id).append('<div id="comment-'+res.salecompleted[i].id+'" class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span><span data-id="'+res.salecompleted[i].comments.length+'" id="comment-number-'+res.salecompleted[i].id+'">'+res.salecompleted[i].comments.length+'</span></div>');
+                        }
+                        // $('#content-info-card-'+res.contacts[i].id).append('<div class="text-muted mx-1">@ 4</div>');
 
                         // console.log(res.contacts[i]);
                         for(var r = 0; r < res.salecompleted[i].tags.length ; r++){
@@ -685,7 +699,7 @@
             reloadRecontact();
             reloadNegotiation();
             reloadSaleCompleted();
-            // reloadNotifications();
+            reloadNotifications();
 
             // função para salvar um novo contato em banco
             $('form[name="form-cad-contato"]').submit(function(event) {
@@ -878,7 +892,6 @@
                 sendBudget();
 
             });
-
 
             // funcção para mover o card de lista neste caso para recontact
             $(document).on('click', '#btn-move-recontact', function(){
@@ -1136,6 +1149,15 @@
                             // $('#input_comment').html('');
                             $("textarea[name=comment]").val('');
 
+                            if ($("#comment-"+res.comment.contactId).length ) {
+                                var qtd_comment_exist = $("#comment-number-"+res.comment.contactId).attr('data-id');
+                                // console.log(qtd_comment_exist);
+                                var qtd_comment_new = parseInt(qtd_comment_exist)+parseInt(1);
+                                $("#comment-number-"+res.comment.contactId).html(qtd_comment_new);
+                            }else{
+                                $('#content-info-card-'+res.comment.contactId).append('<div id="comment-'+res.comment.contactId+'" class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span><span data-id="1" id="comment-number-'+res.comment.contactId+'">1</span></div>');
+                            }
+
                         }else{
                             Toastify({
                                 text: "Erro ao salvar o comentario",
@@ -1150,12 +1172,12 @@
 
             });
 
-            // função para adicionar comentario
+            // função para deletar comentario
             $(document).on('click', '#btn_delete_comment', function(){
 
                 var commentId = $(this).attr("data-id");
 
-                $('#btn_delete_comment').html('<span class="spinner-border" role="status" aria-hidden="true"></span>')
+                $('#btn_delete_comment').html('<span class="spinner-border" role="status" aria-hidden="true"></span>');
 
                 // console.log($contactId);
                 $.ajaxSetup({
@@ -1173,8 +1195,9 @@
                     dataType: "json",
                     success: function(res) {
                         if(res.success){
+                            console.log(res);
                             $('#comment_id_'+commentId).remove();
-                            console.log(res.commentId);
+                            // console.log(res.commentId);
                             console.log("deletado com sucesso");
 
                         }else{
@@ -1216,7 +1239,7 @@
                     success: function(res) {
                         console.log(res.tag);
                         if(res.success){
-                            $('#content-tags').append($("<span class='badge mt-1 label-tag' style='background-color:"+res.tag.color+"'> "+res.tag.text+" <button class='btn py-0 px-1 text-white btn-delete-tag'>x</button></span>"));
+                            $('#content-tags').append($("<span class='badge mt-1 label-tag' style='background-color:"+res.tag.color+"'> "+res.tag.text+" <button class='btn py-0 px-1 text-white btn-delete-tag' id='btn-delete-tag' data-id="+res.tag.id+">x</button></span>"));
                             $('#list-tag-'+res.tag.contact_id).append($('<span class="badge mx-1 mt-1" style="background-color:'+res.tag.color+'">'+res.tag.text+'</span>'));
                         }else{
                             Toastify({
@@ -1226,6 +1249,42 @@
                                 backgroundColor: "linear-gradient(to right, #de1d2d, #8c0712)",
                             }).showToast();
 
+                        }
+                    }
+                });
+
+            });
+
+
+        $(document).on('click', '#bnt-delete-tag', function(){
+                var tagId = $(this).attr('data-id');
+                // console.log(tagId);
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('comercial.contato.tag.destroy') }}",
+                    data: {
+                        tagId:tagId
+                    },
+                    dataType: "json",
+                    success: function(res) {
+                        // console.log(res.success);
+                        if(res.success){
+                            $('#label-tag-'+res.tagId).remove();
+                            $('#card-tag-'+res.tagId).remove();
+                        }else{
+                            Toastify({
+                                text: res.message,
+                                duration: 3000,
+                                close: true,
+                                backgroundColor: "linear-gradient(to right, #de1d2d, #8c0712)",
+                            }).showToast();
                         }
                     }
                 });
@@ -1270,41 +1329,6 @@
                 });
 
 
-
-            });
-
-            $(document).on('click', '#bnt-delete-tag', function(){
-                var tagId = $(this).attr('data-id');
-                // console.log(tagId);
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
-                $.ajax({
-                    type: "post",
-                    url: "{{ route('comercial.contato.tag.destroy') }}",
-                    data: {
-                        tagId:tagId
-                    },
-                    dataType: "json",
-                    success: function(res) {
-                        // console.log(res.success);
-                        if(res.success){
-                            $('#label-tag-'+res.tagId).remove();
-                            $('#card-tag-'+res.tagId).remove();
-                        }else{
-                            Toastify({
-                                text: res.message,
-                                duration: 3000,
-                                close: true,
-                                backgroundColor: "linear-gradient(to right, #de1d2d, #8c0712)",
-                            }).showToast();
-                        }
-                    }
-                });
 
             });
 
@@ -1364,21 +1388,6 @@
 
             });
 
-            // $('form[name="formFilterCards"]').submit(function(event){
-            //     event.preventDefault();
-            //     // var cards = $("#selectCards").val();
-            //     // var cardsTime = $("#selectTime").val();
-
-            //     $.ajax({
-            //         type: "POST",
-            //         url: "{{ route('comercial.painel.addFilterSession') }}",
-            //         data: $(this).serialize(),
-            //         dataType: "json",
-            //         success: function(res) {
-            //             console.log(res);
-            //         }
-            //     });
-            // });
 
             let keyupTimer;
 
@@ -1468,6 +1477,54 @@
             });
 
 
+            function uploadFilesContact(type){
+
+                $('#content'+type).html('<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div> Carregando...');
+                var formName = "formularioda"+type;
+                var formdata = new FormData($("form[name='"+formName+"']")[0]);
+                $("#"+type).addClass('d-none');
+
+                $.ajax({
+                        type: "POST",
+                        url: "{{ route('comercial.contato.uploadFilesContact') }}",
+                        data: formdata,
+                        processData: false,
+                        contentType: false,
+                        success: function(res) {
+                            console.log(res);
+                            $('#content'+type).html('<a href="{{env("APP_URL")}}/storage/'+res.uploadFiles.path+'" class="btn btn-primary btn-sm px-3" download="'+type+'.pdf">'+type+'</a>');
+
+                            if (res.success) {
+                                Toastify({
+                                    text: res.message,
+                                    duration: 3000,
+                                    close: true,
+                                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                                }).showToast();
+                            }else{
+                                console.log(res.message);
+                            }
+
+                        }
+                    });
+
+            }
+
+            $(document).on('change','#cnh', function(){
+                uploadFilesContact('cnh');
+            });
+
+            $(document).on('change', "#holerite", function(){
+                uploadFilesContact('holerite');
+            });
+
+            $(document).on('change', "#padrao", function(){
+                uploadFilesContact('padrao');
+            });
+
+            $(document).on('change', '#contageradora', function(){
+                uploadFilesContact('contageradora');
+            });
 
         });
 

@@ -41,13 +41,15 @@
                     <div class="dropdown-menu border shadow" aria-labelledby="dropdownMenuButton902">
                         <h6 class="dropdown-header">Todas as Etiquetas</h6>
                         @foreach ($tags as $bdTag)
-                            <button class="dropdown-item btn-add-tag" style="background-color: {{$bdTag->color}}; color:white;" data-id="{{$data->id}}" value="{{$bdTag->id}}">{{$bdTag->text}}</button>
+                            @if ($bdTag->category == "comercial")
+                                <button class="dropdown-item btn-add-tag" style="background-color: {{$bdTag->color}}; color:white;" data-id="{{$data->id}}" value="{{$bdTag->id}}">{{$bdTag->text}}</button>
+                            @endif
                         @endforeach
                     </div>
                 </div>
 
                 @foreach ($data->tags as $tag)
-                    <span class="badge mt-1 label-tag" id="label-tag-{{$tag->id}}" style="background-color: {{$tag->color}}">{{$tag->text}} <button class="btn py-0 px-1 text-white btn-delete-tag" id="bnt-delete-tag" data-id="{{$tag->id}}">x</button></span>
+                    <span class="badge mt-1 label-tag" id="label-tag-{{$tag->id}}" style="background-color: {{$tag->color}}; color:{{$tag->text_color}};">{{$tag->text}} <button class="btn py-0 px-1 text-white btn-delete-tag" id="bnt-delete-tag" data-id="{{$tag->id}}">x</button></span>
                 @endforeach
 
             </div>
@@ -112,6 +114,12 @@
                                     <button type="button" class="list-group-item list-group-item-action">Arquivar Contato</button>
                                 </div>
                             </div>
+                            @if ($data->list == "budgetSent")
+
+
+                                    <input type="hidden" value="{{$data->id}}" name="id_contact" id="id_contact">
+                                    <p>Recontactar dia:<input type="date" value="{{$data->date_recontact}}" id="value-date"  class="form-control"><button id="date-recontactar" class="btn btn-sm">Salvar</button></p>
+                                @endif
                         </div>
                     </div>
                </div>
@@ -236,7 +244,7 @@
             <!-- Task App Widget Starts -->
             <section class="tasks">
                 <div class="row">
-                    <div class="col-lg-7">
+                    <div class="col-lg-12">
                         <div class="card widget-todo">
                             <div class="card-header border-bottom d-flex justify-content-between align-items-center">
                                 <h4 class="card-title d-flex">
@@ -271,7 +279,7 @@
                                                 <td id="date-checklist-{{$checklistItems[$i]->id}}">
                                                     @for($x = 0; $x < count($checklistContacts); $x++)
                                                         @if ($checklistContacts[$x]->checklistItem_id === $checklistItems[$i]->id)
-                                                            @if ($checklistContacts[$x]->status == true) <small class="text-muted">{{$checklistContacts[$x]->date}}</small> @endif
+                                                            @if ($checklistContacts[$x]->status == true) <small class="text-muted">{{ date('d/m/Y', strtotime($checklistContacts[$x]->date))}}</small> @endif
                                                         @endif
                                                     @endfor
                                                 </td>
@@ -293,7 +301,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">Atribuir</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <button type="button" id="closeItem{{$checklistItems[$i]->id}}" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
                                                     </div>
@@ -328,7 +336,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-5">
+                    <div class="col-lg-12">
                         <div class="card widget-todo">
                             <div class="card-header border-bottom d-flex justify-content-between align-items-center">
                                 <h4 class="card-title d-flex">
@@ -339,39 +347,86 @@
                             <div class="card-body px-0 py-1">
                                 <table class="table table-borderless">
                                     <tr>
-                                        <td class="col-3">CNH / Similar</td>
-                                        <td class="col-6">
-                                            <div class="input-group">
-                                                <input type="file" class="form-control form-control-sm" id="inputGroupFile04"
-                                                    aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                                            </div>
+                                        <td class="col-3">CNH (Titular da conta)**</td>
+                                        <td class="col-3">
+
+                                            @foreach ($uploadFiles as $file)
+                                            @if ($file->type == "cnh")
+                                                <a href="{{env("APP_URL")}}/storage/{{$file->path}}" class="btn btn-primary btn-sm px-3" download="cnh-{{$file->created_at}}">{{$file->type}} <span class="fa-fw select-all fas"></span></a>
+                                            @endif
+                                            @endforeach
+                                        </td>
+                                        <td class="col-3">
+                                            <form id="formulariodacnh" name="formulariodacnh" method="post" enctype="multipart/form-data">
+                                                <div class="input-group" >
+                                                    <div id="contentcnh" class=""></div>
+                                                    <input type="hidden" name="type" id="" value="cnh">
+                                                    <input type="hidden" name="contact_id" id="" value="{{$data->id}}">
+                                                    <input type="file" class="form-control form-control-sm" id="cnh" name="cnh[]" multiple aria-label="Upload">
+                                                </div>
+                                            </form>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-3">Compr. Residencia</td>
-                                        <td class="col-6">
-                                            <div class="input-group">
-                                                <input type="file" class="form-control form-control-sm" id="inputGroupFile04"
-                                                    aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                                            </div>
+                                        <td class="col-3">Conta da Unid. Geradora**</td>
+                                        <td class="col-3">
+                                            @foreach ($uploadFiles as $file)
+                                            @if ($file->type == "contageradora")
+                                                <a href="{{env("APP_URL")}}/storage/{{$file->path}}" class="btn btn-primary btn-sm px-3" download="cnh-{{$file->created_at}}">{{$file->type}} <span class="fa-fw select-all fas"></span></a>
+                                            @endif
+                                            @endforeach
+                                        </td>
+                                        <td class="col-3">
+                                            <form id="formulariodacontageradora" name="formulariodacontageradora" method="post" enctype="multipart/form-data">
+                                                <div class="input-group" >
+                                                    <div id="contentcontageradora" class=""></div>
+                                                    <input type="hidden" name="type" id="" value="contageradora">
+                                                    <input type="hidden" name="contact_id" id="" value="{{$data->id}}">
+                                                    <input type="file" class="form-control form-control-sm" id="contageradora" name="contageradora[]" multiple aria-label="Upload">
+                                                </div>
+                                            </form>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="col-3">Holer. ou Similar</td>
-                                        <td class="col-6">
-                                            <div class="input-group">
-                                                <input type="file" class="form-control form-control-sm" id="inputGroupFile04"
-                                                    aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                                            </div>
+                                        <td class="col-3">
+                                            @foreach ($uploadFiles as $file)
+                                            @if ($file->type == "holerite")
+                                                <a href="{{env("APP_URL")}}/storage/{{$file->path}}" class="btn btn-primary btn-sm px-3" download="cnh-{{$file->created_at}}">{{$file->type}} <span class="fa-fw select-all fas"></span></a>
+                                            @endif
+                                            @endforeach
+
+                                        </td>
+                                        <td class="col-3">
+                                            <form id="formulariodaholerite" name="formulariodaholerite" method="post" enctype="multipart/form-data">
+                                                <div class="input-group" >
+                                                    <div id="contentholerite" class=""></div>
+                                                    <input type="hidden" name="type" id="" value="holerite">
+                                                    <input type="hidden" name="contact_id" id="" value="{{$data->id}}">
+                                                    <input type="file" class="form-control form-control-sm" id="holerite" name="holerite[]" multiple aria-label="Upload">
+                                                </div>
+                                            </form>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="col-3">Fotos do Padrão</td>
-                                        <td class="col-6">
-                                            <div class="input-group">
-                                                <input type="file" class="form-control form-control-sm" id="inputGroupFile04"
-                                                    aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                                            </div>
+                                        <td class="col-3">
+                                            @foreach ($uploadFiles as $file)
+                                            @if ($file->type == "padrao")
+                                                <a href="{{env("APP_URL")}}/storage/{{$file->path}}" class="btn btn-primary btn-sm px-3" download="cnh-{{$file->created_at}}">{{$file->type}} <span class="fa-fw select-all fas"></span></a>
+                                            @endif
+                                            @endforeach
+
+                                        </td>
+                                        <td class="col-3">
+                                            <form id="formulariodapadrao" name="formulariodapadrao" method="post" enctype="multipart/form-data">
+                                                <div class="input-group" >
+                                                    <div id="contentpadrao" class=""></div>
+                                                    <input type="hidden" name="type" id="" value="padrao">
+                                                    <input type="hidden" name="contact_id" id="" value="{{$data->id}}">
+                                                    <input type="file" class="form-control form-control-sm" id="padrao" name="padrao[]" multiple aria-label="Upload">
+                                                </div>
+                                            </form>
                                         </td>
                                     </tr>
                                 </table>
@@ -417,7 +472,7 @@
                     <div class="d-flex bd-highlight my-3" id="comment_id_{{$comment->id}}">
                         <div class="p-2 text-right bd-highlight ">
                             <div class="avatar bg-warning me-3">
-                                <span class="avatar-content">CA</span>
+                                <span class="avatar-content">AG</span>
                                 <span class="avatar-status bg-success"></span>
                             </div>
                         </div>
@@ -469,7 +524,7 @@
                 <div class="col-11 d-flex justify-content-end mt-3">
                     <button class="btn btn-primary px-2 btn-sm mx-2" id="btn-move-recontact">Mover para Recontactar</button>
                     <button class="btn btn-primary px-2 btn-sm mx-2" id="btn-mover-apresentado">Mover para Apresentado</button>
-                    <a href="{{route('comercial.client.new', ['contact_id'=>$data->id])}}" class="btn btn-success px-2 btn-sm" id="btn-mover-fechado_retirar">Mover para Fechado</a>
+                    <a href="{{route('comercial.client.new', ['contact_id'=>$data->id, 'checkContact' => true])}}" class="btn btn-success px-2 btn-sm" id="btn-mover-fechado_retirar">Mover para Fechado</a>
                 </div>
             @break
 
@@ -508,12 +563,14 @@
             }
         });
 
-        $(document).on("click", "#btn-edit-name-contact", function(){
-            console.log('clicou me salvar');
+        $(document).on("click", "#btn-edit-name-contact", function(event){
+
+            // console.log('clicou me salvar');
+            $(this).attr("disabled", true);
 
             var valordigitado = $("#nameContact").val();
             var valorDb = '{{$data->name}}';
-            var idContact = {{$data->id}};
+            var idContact = '{{$data->id}}';
 
             if(valordigitado != valorDb){
 
@@ -542,7 +599,12 @@
                                 close: true,
                                 backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                             }).showToast();
+
                             console.log(res);
+
+                            idContact = null;
+                            valordigitado = null;
+                            valorDb = null;
                         }else{
                             Toastify({
                                 text: res.message,
@@ -556,14 +618,59 @@
             }
         });
 
+        $('#date-recontactar').click(function(){
+            // console.log('clicou em salvar data');
+            var date_recontact = $('#value-date').val();
+            var id_contact = $('#id_contact').val();
+
+            $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('comercial.contato.updateDateRecontact') }}",
+                    data: {
+                        date_recontact:date_recontact,
+                        id_contact:id_contact
+                    },
+                    dataType: "json",
+                    success: function(res) {
+                        if(res.success){
+                            console.log(res);
+                            Toastify({
+                                text: res.message,
+                                duration: 3000,
+                                close: true,
+                                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                            }).showToast();
+                            console.log(res);
+                        }else{
+                            Toastify({
+                                text: res.message,
+                                duration: 3000,
+                                close: true,
+                                backgroundColor: "linear-gradient(to right, #de1d2d, #8c0712)",
+                            }).showToast();
+                        }
+                    }
+                });
+
+
+        });
+
         $(".checkbox-checklist").click(function(){
             var checklistId = $(this).attr('data-id');
             // console.log(checklistId);
 
             //exibe a modal
             $('#checklistInfo'+checklistId).modal('show');
+            $(".btn_envia_event_checklist").attr('id', 'btn_envia_request_checklist'+checklistId);
 
-            $(".btn_envia_event_checklist").click(function(){
+            // $('btn_envia_request_checklist'+checklistId).click(function(){
+            $(document).on('click','#btn_envia_request_checklist'+checklistId,function(){
 
                 $(this).attr("disabled", true);
                 $(this).html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div> Solicitando...');

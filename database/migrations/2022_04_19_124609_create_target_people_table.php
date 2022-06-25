@@ -13,7 +13,7 @@ class CreateTargetPeopleTable extends Migration
      */
     public function up()
     {
-        Schema::create('target_people', function (Blueprint $table) {
+        Schema::create('target_peoples', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('contact_id');
@@ -31,6 +31,6 @@ class CreateTargetPeopleTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('target_people');
+        Schema::dropIfExists('target_peoples');
     }
 }
