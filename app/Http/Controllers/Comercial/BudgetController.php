@@ -17,7 +17,6 @@ class BudgetController extends Controller
     {
         try {
 
-
             // $request =  $request->all();
 
             // contactId: "10"
@@ -36,6 +35,7 @@ class BudgetController extends Controller
             $budget->media_kwh     = $request['mediakwh'];
             $budget->media_valor   = $request['mediavalor'];
             $budget->save();
+
 
             if(isset($request['uploadArquivos'])){
 

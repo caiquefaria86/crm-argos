@@ -4,8 +4,8 @@
         <div class="auth-logo">
             <a href="index.html"><img src="{{ asset('/images/logo/logo.png') }}" alt="Logo"></a>
         </div>
-        <h1 class="auth-title">Login.</h1>
-        <p class="auth-subtitle mb-5">Para acessar o Crm precisa se autenticar.</p>
+        <h1 class="auth-title">CRM Login</h1>
+        <p class="auth-subtitle mb-5">Para acessar precisa se autenticar.</p>
 
         @if (session('status'))
         <div class="mb-4 font-medium text-sm text-green-600">
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="form-group position-relative has-icon-left mb-4">
-                <input type="password" class="form-control form-control-xl" name="password" placeholder="Password"
+                <input type="password" class="form-control form-control-xl" name="password" placeholder="Senha"
                     placeholder="Password">
                 <div class="form-control-icon">
                     <i class="bi bi-shield-lock"></i>
@@ -39,7 +39,7 @@
                     Me manter conectado
                 </label>
             </div>
-            <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
+            <button class="btn btn-primary btn-block btn-lg shadow-lg mt-3">Entrar</button>
         </form>
         <div class="text-center mt-5 text-lg fs-4">
             @if (Route::has('register'))

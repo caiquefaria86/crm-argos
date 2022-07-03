@@ -320,4 +320,32 @@ class ContactController extends Controller
         }
     }
 
+    public function toFile(Request $request)
+    {
+        try {
+
+            $contactAffeted = DB::table('contacts')
+            ->where('id', $request['contactId'])
+            ->update([
+                'status' => 0
+              ]);
+
+            return response()->json([
+                'success' => true,
+                'message'=>'Usuário arquivado com sucesso'
+            ]);
+
+        } catch (\Throwable $th) {
+            throw $th;
+            return response()->json([
+                'success' => true,
+                'message'=>'Erro ao arquivar este usuario '.$th
+            ]);
+        }
+
+
+
+
+    }
+
 }

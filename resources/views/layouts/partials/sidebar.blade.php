@@ -54,9 +54,9 @@
                     <li class="submenu-item ">
                         <a href="{{route('admin.tags.groups')}}">Etiquetas (Tags)</a>
                     </li>
-                    <li class="submenu-item ">
+                    {{-- <li class="submenu-item ">
                         <a href="#">CheckLists</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
 

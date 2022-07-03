@@ -25,7 +25,7 @@ use App\Http\Controllers\comercial\TargetPeopleController;
 */
 
 Route::get('/', function () {
-    return view('auth.login');
+    return redirect('https://argoseng.com.br');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::post('/addFilterSession', [ComercialController::class, 'addFilterSession'])->name('painel.addFilterSession');
         Route::get('/relatorio/{mes?}/{ano?}',[ComercialController::class, 'reportIndex'])->name('report');
         Route::post('/contato/cadastrar',[ContactController::class, 'store'])->name('contato.store');
+        Route::post('/contato/arquivarContato',[ContactController::class, 'toFile'])->name('contato.toFile');
         //retorna os dados da modal de contato.
         Route::post('/contato/datamodal', [ContactController::class, 'dataModal'])->name('contato.datamodal');
         Route::post('/solicitar/orcamento', [BudgetController::class, 'store'])->name('contato.budget.new');

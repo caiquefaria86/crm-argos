@@ -67,8 +67,7 @@
 
             </div>
         </div>
-
-            <div class="col-8 mt-1 mx-2 rounded bg-white">
+            <div class="col-10 col-sm-8  mt-1 mx-2 rounded bg-white">
                 <div class="row my-2">
                     <div class="col-12">
                         <h4 class="title-contact">
@@ -92,7 +91,7 @@
                 </div>
 
             </div>
-            <div class="col-3 mt-1 rounded  bg-white">
+            <div class="col-10 col-sm-3 mt-1 rounded  bg-white">
                <div class="row my-2">
                     <div class="col-12">
                         <h4 class="title-contact"><span class="fa-fw select-all fas"></span> Opções</h4>
@@ -101,7 +100,7 @@
                                 <div class="list-group">
                                         <button class="list-group-item list-group-item-action dropdown-toggle" type="button" id="incluirPessoa"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Inlcuir Pessoa
+                                            <span class="fa-fw select-all fas"></span> Incluir
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="incluirPessoa">
                                             <h6 class="dropdown-header">Colaboradores</h6>
@@ -111,7 +110,9 @@
                                                 @endif
                                             @endforeach
                                         </div>
-                                    <button type="button" class="list-group-item list-group-item-action">Arquivar Contato</button>
+                                    <button type="button" id="desativar_contato" class="list-group-item list-group-item-action">
+                                        <span class="fa-fw select-all fas"></span> Arquivar
+                                    </button>
                                 </div>
                             </div>
                             @if ($data->list == "budgetSent")
@@ -537,6 +538,7 @@
 <script>
     var contSalvar = false;
     $(function(){
+
         $('#btn-fazer-orcamento').click(function(){
             // console.log('clicou no btn');
             $('#view-contact').modal('hide');
@@ -724,6 +726,51 @@
                 });
 
             });
+
+        });
+
+        //desativar clientes
+        $('#desativar_contato').click(function(){
+            // console.log('clicou no desativar');
+            $(this).html('<span class="spinner-border" role="status" aria-hidden="true"></span>');
+            var contactId = '{{$data->id}}';
+
+            $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $.ajax({
+            type: "post",
+            url: "{{ route('comercial.contato.toFile') }}",
+            data: {
+                contactId:contactId,
+            },
+            dataType: "json",
+            success: function(res) {
+                $('#view-contact').modal('hide');
+                $("#"+contactId).remove();
+
+                if(res.success){
+                    Toastify({
+                        text: res.message,
+                        duration: 3000,
+                        close: true,
+                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }).showToast();
+
+                }else{
+                    Toastify({
+                        text: res.message,
+                        duration: 3000,
+                        close: true,
+                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }).showToast();
+
+                }
+            }
+        });
 
         });
 
