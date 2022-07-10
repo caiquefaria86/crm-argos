@@ -45,6 +45,7 @@ class ProjectController extends Controller
             $project->tipo_pagamento    = $request['tipo_pagamento'];
             $project->entrada           = $entrada;
             $project->qtd_parcelas      = $request['qtd_parcelas'];
+            $project->descriptionFormPayments = $request['descriptionFormPayments'];
             $project->status            = "Não concluido";
             $project->client_id         = $request['client_id'];
             $project->save();

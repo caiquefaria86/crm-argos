@@ -54,6 +54,9 @@
                     <li class="submenu-item ">
                         <a href="{{route('admin.tags.groups')}}">Etiquetas (Tags)</a>
                     </li>
+                    <li class="submenu-item ">
+                        <a href="{{route('admin.campaign.index')}}">Campanhas</a>
+                    </li>
                     {{-- <li class="submenu-item ">
                         <a href="#">CheckLists</a>
                     </li> --}}

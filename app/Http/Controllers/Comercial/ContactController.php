@@ -104,6 +104,14 @@ class ContactController extends Controller
                                         ->where('checklistGroup_id', 1)
                                         ->get();
 
+        $checklistItems_closedwork = ChecklistItems::where('checklistGroup_id', 2)
+                                        ->with('checklist')
+                                        ->get();
+
+        $checklistContacts_closedwork = Checklist::where('contact_id', $contactId)
+                                ->where('checklistGroup_id', 2)
+                                ->get();
+
         $uploadFiles = UploadFileContact::where('contact_id', $contactId)->get();
 
         // return response()->json([
@@ -119,10 +127,13 @@ class ContactController extends Controller
             'budgetsContact' => $budgetsContact,
             'tags'           => $tags,
             'checklistItems' => $checklistItems,
+            'checklistItems_closedwork' => $checklistItems_closedwork,
             'allUsers'       => $allUsers,
             'authUser'       => $authUser,
             'checklistContacts'  => $checklistContacts,
-            'uploadFiles'    => $uploadFiles
+            'uploadFiles'    => $uploadFiles,
+            'checklistContacts_closedwork' => $checklistContacts_closedwork
+
 
             ])->render();
 
@@ -132,6 +143,8 @@ class ContactController extends Controller
             'budgetsContact'    => $budgetsContact,
             'checklistItems'    =>$checklistItems,
             'checklistContacts'  => $checklistContacts,
+            'checklistContacts_closedwork' => $checklistContacts_closedwork,
+            'checklistItems_closedwork' => $checklistItems_closedwork,
             'uploadFiles'       =>$uploadFiles
         ));
     }
@@ -254,6 +267,8 @@ class ContactController extends Controller
         }
     }
 
+
+
     public function checklistStore(Request $request)
     {
         try {
@@ -261,7 +276,7 @@ class ContactController extends Controller
 
             $checklist = new Checklist();
             $checklist->checklistItem_id = $request->checklist_id_event;
-            $checklist->checklistGroup_id = 1;
+            $checklist->checklistGroup_id = $request->checklistGroup_id ;
             $checklist->contact_id = $request->contact_id_event;
             $checklist->status = true;
             $checklist->user_id = $request->user_event;
@@ -280,6 +295,30 @@ class ContactController extends Controller
                 'success' => false,
                 'message' => 'Erro ao marcar checkList ',
                 'error'   => $th
+            ]);
+
+        }
+    }
+
+    public function checklistDestroy(Request $request)
+    {
+        try {
+            // id 	checklistItem_id 	checklistGroup_id 	contact_id 	status 	user_id
+
+            $checklistId = $request['checklistId'];
+
+            $destroy  = Checklist::where('id', $checklistId)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'CheckList Deletado com sucesso! ',
+            ]);
+
+        } catch (\Throwable $th) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao deletar checkList '.$th,
             ]);
 
         }
@@ -342,7 +381,33 @@ class ContactController extends Controller
                 'message'=>'Erro ao arquivar este usuario '.$th
             ]);
         }
+    }
 
+    public function addFormPayments(Request $request)
+    {
+        $content = $request['conteudoFormPayment'];
+        $contact_id = $request['contact_id'];
+
+        try {
+            $contactAffeted = DB::table('contacts')
+            ->where('id', $contact_id)
+            ->update([
+                'formPayments' => $content
+              ]);
+
+            return response()->json([
+                'success' => true,
+                'message'=>'Forma de Pagamento Salva com sucesso!',
+                // 'data' => $request->all()
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'success' => false,
+                'message'=>'Erro ao Salvar! '.$th,
+                // 'data' => $request->all()
+            ]);
+        }
 
 
 

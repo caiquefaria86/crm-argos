@@ -118,7 +118,15 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-12">
-                                        <h5 class="mt-5">Arquivos</h5>
+                                        <div class="card">
+                                                <div class="form-group">
+                                                    <label for="contentFormPayment"> Descrição detalhada da forma de pagamento: (opcional)</label>
+                                                    <textarea class="form-control"  name="contentFormPayment" id="contentFormPayment" rows="2"></textarea>
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <h5 class="">Arquivos</h5>
                                         <hr>
 
                                         <label for="">Upload da Proposta Final:</label>
@@ -127,7 +135,7 @@
                                         <label class="mt-3" for="novacnh">Conta da Unidade Geradora:</label>
                                         <input type="file" class="form-control" id="novacnh" name="contaUnidGeradora[]" multiple>
 
-                                        <p class="mt-5">CHN vai ser a mesma do Cliente ?</p>
+                                        <p class="mt-5">Titular da conta geradora é o mesmo do cliente?</p>
 
                                         @php
                                             $i = 1;

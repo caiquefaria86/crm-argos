@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\Comercial\BudgetController;
 use App\Http\Controllers\Comercial\CommentController;
 use \App\Http\Controllers\Comercial\ContactController;
@@ -50,6 +51,10 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::put('/etiqueta/update', [TagController::class, 'update'])->name('tags.update');
         Route::delete('/etiqueta/{id}/destroy', [TagController::class, 'destroy'])->name('tags.destroy');
         Route::put('usuario/editarPermissoes', [UsersController::class, 'updatePermission'])->name('usuarios.updatePermission');
+        Route::get('/campanhas', [CampaignController::class, 'index'])->name('campaign.index');
+        Route::get('/campanha/nova', [CampaignController::class, 'create'])->name('campaign.new');
+        Route::post('/campanha/store', [CampaignController::class, 'store'])->name('campaign.store');
+        Route::delete('/campanha/{id}/destroy', [CampaignController::class, 'destroy'])->name('campaign.destroy');
     });
 
     Route::post('/notifications/reload', [NotificationController::class, 'notifications'])->name('notification.reload');
@@ -71,6 +76,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::post('/contato/movecard', [ContactController::class, 'moveCard'])->name('contato.moveCard');
         Route::post('/contato/updatename', [ContactController::class, 'updateName'])->name('contato.updateName');
         Route::post('/contato/checklistStore', [ContactController::class, 'checklistStore'])->name('contato.checklistStore');
+        Route::post('/contato/checklistDestroy', [ContactController::class, 'checklistDestroy'])->name('contato.checklistDestroy');
         Route::post('/contato/enviacnh', [ContactController::class, 'uploadFilesContact'])->name('contato.uploadFilesContact');
         Route::post('/contato/updateDateRecontact', [ContactController::class, 'updateDateRecontact'])->name('contato.updateDateRecontact');
 
@@ -80,6 +86,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::post('/contato/addTag', [TagContactController::class, 'store'])->name('contato.tag.store');
         Route::post('/contato/deleteTag', [TagContactController::class, 'destroy'])->name('contato.tag.destroy');
 
+        Route::post('/contato/addFormPayments', [ContactController::class, 'addFormPayments'])->name('contato.addFormPayments');
         Route::post('/targetpeople/store', [ContactController::class, 'targetPeople'])->name('contato.targetpeople.store');
         Route::get('/dados', [ContactController::class, 'index'])->name('contato.index');
 

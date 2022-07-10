@@ -148,6 +148,19 @@
                 </div>
             </div>
 
+            {{-- OBRA FECHADA --}}
+            <div class="list">
+
+                <h3 class="list-title">Obra Fechada <button class="btn btn-sm" id="btnReloadclosedwork"><span class="fa-fw select-all fas"></span></button></h3>
+
+                <div class="list-items" id="list-closedwork">
+                    <div class="text-center my-5" id="loading-closedwork-modal">
+                        <img src="{{ asset('vendors/svg-loaders/audio.svg') }}" class="me-4"
+                            style="width: 3rem" alt="audio">
+                    </div>
+                </div>
+            </div>
+
             {{-- fechado --}}
             <div class="list">
 
@@ -342,18 +355,17 @@
                                                     <label for="origin">Origem do contato:</label>
                                                     <select name="origin" class="form-select" id="basicSelect"
                                                         required>
-                                                        <option value="facebook Ads">Facebook / Instagram</option>
-                                                        <option value="google">Google</option>
-                                                        <option value="Indicação Pessoal" selected>Indicação Pessoal
-                                                        </option>
-                                                        <option value="Visita Escritório">Visita Escritório</option>
-                                                        <option value="Parceria Terceiros">Parceria / terceiros</option>
+                                                        @forelse ($campanhas as $campanha )
+                                                            <option value="{{$campanha->text}}">{{$campanha->text}}</option>
+                                                        @empty
+                                                            <option value="Usuario comun">Usuário Comum</option>
+                                                        @endforelse
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
-                                                    <label for="responsible_id">Responsável:</label>
+                                                    <label for="responsible_id">Vendedor:</label>
                                                     <div class="input-group mb-3">
                                                         <label class="input-group-text"
                                                             for="responsible_id">Usuários</label>
@@ -391,7 +403,7 @@
 
     <script type="text/javascript">
 
-    function reloadContacts() {
+function reloadContacts() {
     $(".card-trello-contact").remove();
     $('#loading-contacts-modal').removeClass('d-none');
 
@@ -588,6 +600,47 @@ function reloadNegotiation() {
     });
 }
 
+function reloadclosedwork() {
+    $(".card-trello-closedwork").remove();
+    $('#loading-closedwork-modal').removeClass('d-none');
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        type: "post",
+        url: "{{route('comercial.painel.reloadcontacts')}}",
+        dataType: "json",
+        success: function(res) {
+            // console.log(count(res.contacts));
+            $('#loading-closedwork-modal').addClass('d-none');
+            for(var i = 0; i < res.closedwork.length; i++){
+                // console.log(res.contacts[i].name);
+                // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
+                $('#list-closedwork').append("<div id='"+res.closedwork[i].id+"' class='card-trello-closedwork' data_id='"+res.closedwork[i].id+"'>"+ res.closedwork[i].name +"</div>");
+                $("#"+res.closedwork[i].id).prepend("<div id='list-tag-"+res.closedwork[i].id+"' class='w-100 mb-2'></div>");
+                $('#'+res.closedwork[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.closedwork[i].id+'"></div>');
+
+                if (res.closedwork[i].comments.length > 0) {
+                    $('#content-info-card-'+res.closedwork[i].id).append('<div id="comment-'+res.closedwork[i].id+'" class="text-muted mx-1"><span class="fa-fw select-all icon-comment-card fas"></span><span data-id="'+res.closedwork[i].comments.length+'" id="comment-number-'+res.closedwork[i].id+'">'+res.closedwork[i].comments.length+'</span></div>');
+                }
+                // $('#content-info-card-'+res.contacts[i].id).append('<div class="text-muted mx-1">@ 4</div>');
+
+                // console.log(res.contacts[i]);
+                for(var r = 0; r < res.closedwork[i].tags.length ; r++){
+
+                    $("#list-tag-"+res.closedwork[i].id).append("<span class='badge mx-1 mt-1' id='card-tag-"+res.closedwork[i].tags[r].id+"' style='background-color:"+res.closedwork[i].tags[r].color+"'>"+res.closedwork[i].tags[r].text+"</span>");
+
+                }
+            }
+        }
+    });
+}
+
+
 function reloadSaleCompleted() {
     $(".card-trello-salecompleted").remove();
     $('#loading-SaleCompleted-modal').removeClass('d-none');
@@ -692,12 +745,13 @@ $(document).ready(function(){
     reloadBudgetSent();
     reloadRecontact();
     reloadNegotiation();
+    reloadclosedwork();
     reloadSaleCompleted();
     reloadNotifications();
 
 
     //função para abrir a modal de contatos geral.
-    $(document).on('click', '.card-trello-contact, .card-trello-budget, .card-trello-budgetsent, .card-trello-recontact, .card-trello-negotiation, .card-trello-salecompleted, .card-trello-contacts', function(){
+    $(document).on('click', '.card-trello-contact, .card-trello-budget, .card-trello-budgetsent, .card-trello-recontact, .card-trello-negotiation, .card-trello-closedwork, .card-trello-salecompleted, .card-trello-contacts', function(){
         //linha para personalizar o loading
         dataId = $(this).attr('id');
 
@@ -902,6 +956,43 @@ $(document).ready(function(){
 
     });
 
+    // btn-mover-closedwork
+    $(document).on('click', '#btn-mover-closedwork', function(){
+
+        $("#btn-mover-negociacao").html('Movendo para Obra Fechada...');
+        $("#btn-mover-negociacao").attr("disabled", true);
+        $('#spinner-orcamento').removeClass('d-none');
+
+        // console.log("data-id - "+ dataId);
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('comercial.contato.moveCard') }}",
+            data: {
+                contact_id: dataId,
+                destination: 'closedwork'
+            },
+            dataType: "json",
+            success: function(res) {
+                console.log(res.success);
+                $('#view-contact').modal('hide');
+                if (res.success) {
+                    Toastify({
+                        text: "Movido com sucesso",
+                        duration: 3000,
+                        close: true,
+                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    }).showToast();
+                }
+
+                reloadNegotiation();
+                reloadBudgetSent();
+                reloadRecontact();
+            }
+        });
+
+    });
+
     // btn-mover-fechado
     $(document).on('click', '#btn-mover-fechado', function(){
         $("#btn-mover-fechado").html('Movendo para fechado');
@@ -976,6 +1067,10 @@ $(document).ready(function(){
 
     $('#btnReloadContact').click(function(){
         reloadContacts();
+    });
+
+    $('#btnReloadclosedwork').click(function(){
+        reloadclosedwork();
     });
 
     $('#btnReloadrequestBudget').click(function(){
@@ -1420,6 +1515,11 @@ $(document).ready(function(){
         $(document).on('change', '#contageradora', function(){
             uploadFilesContact('contageradora');
         });
+
+        $(document).on('change', '#others', function(){
+            uploadFilesContact('others');
+        });
+
 
     });
 

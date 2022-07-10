@@ -7,6 +7,7 @@ use App\Models\Budget;
 use App\Models\Client;
 use App\Models\Contact;
 use App\Models\Project;
+use App\Models\Campaign;
 use App\Models\BudgetSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,12 +27,14 @@ class ComercialController extends Controller
         $allUsers = User::all();
         $userId = Auth::user()->id;
         $authUser = Auth::user();
+        $campanhas = Campaign::all();
 
         return view('comercial.painel',[
             'contacts' => $contacts,
             'allUsers' => $allUsers,
             'userId'   => $userId,
             'authUser' => $authUser,
+            'campanhas'=> $campanhas
         ]);
     }
 
@@ -61,6 +64,8 @@ class ComercialController extends Controller
 
         $negotiations = $this->queryContactLists('negotiation');
 
+        $closedwork = $this->queryContactLists('closedwork');
+
         $salecompleted = $this->queryContactLists('salecompleted');
 
         return response()->json([
@@ -70,6 +75,7 @@ class ComercialController extends Controller
             'budgetSent'    => $budgetsSents,
             'recontact'     => $recontact,
             'negotiations'  => $negotiations,
+            'closedwork'    => $closedwork,
             'salecompleted' => $salecompleted
         ]);
     }
@@ -277,7 +283,5 @@ class ComercialController extends Controller
 
         return $name;
     }
-
-
 
 }

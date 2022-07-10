@@ -28,6 +28,7 @@ class Contact extends Model
         'email',
         'origin',
         'responsibleOffice',
+        'formPayments'
     ];
 
     public function user()

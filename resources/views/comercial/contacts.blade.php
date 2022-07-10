@@ -226,7 +226,7 @@
 
     {{-- Inicio da negociação --}}
 
-    @if(($data->list == "negotiation")||($data->list == "salecompleted"))
+    @if(($data->list == "negotiation")||($data->list == "closedwork")||($data->list == "salecompleted"))
     <div class="row opções mt-2  d-flex justify-content-center">
         <div class="col-11 rounded bg-white">
             <div class="d-flex bd-highlight">
@@ -338,12 +338,23 @@
                         </div>
                     </div>
                     <div class="col-lg-12">
+                        <div class="card">
+                            <form action="" method="post">
+                                <div class="form-group">
+                                    <label for="contentFormPayment">Forma de Pagamento Desejada:</label>
+                                    <textarea class="form-control"  name="contentFormPayment" id="contentFormPayment" rows="2">{{$data->formPayments}}</textarea>
+                                    <input type="hidden" id="contact_id_formPayment" name="contact_id" value="{{$data->id}}">
+                                </div>
+                                <button type="submit" id="sendFormPayment" class="btn btn-sm btn-primary">Salvar</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
                         <div class="card widget-todo">
                             <div class="card-header border-bottom d-flex justify-content-between align-items-center">
                                 <h4 class="card-title d-flex">
                                     <i class="bx bx-check font-medium-5 pl-25 pr-75"></i>Arquivos
                                 </h4>
-
                             </div>
                             <div class="card-body px-0 py-1">
                                 <table class="table table-borderless">
@@ -430,6 +441,27 @@
                                             </form>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td class="col-3">Outros</td>
+                                        <td class="col-3">
+                                            @foreach ($uploadFiles as $file)
+                                            @if ($file->type == "others")
+                                                <a href="{{env("APP_URL")}}/storage/{{$file->path}}" class="btn btn-primary btn-sm px-3" download="cnh-{{$file->created_at}}">Outros <span class="fa-fw select-all fas"></span></a>
+                                            @endif
+                                            @endforeach
+
+                                        </td>
+                                        <td class="col-3">
+                                            <form id="formulariodaothers" name="formulariodaothers" method="post" enctype="multipart/form-data">
+                                                <div class="input-group" >
+                                                    <div id="contentothers" class=""></div>
+                                                    <input type="hidden" name="type" id="" value="others">
+                                                    <input type="hidden" name="contact_id" id="" value="{{$data->id}}">
+                                                    <input type="file" class="form-control form-control-sm" id="others" name="others[]" multiple aria-label="Upload">
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -440,6 +472,138 @@
         </div>
     </div>
     @endif
+
+
+    @if(($data->list == "negotiation")||($data->list == "closedwork")||($data->list == "salecompleted"))
+    <div class="row opções mt-2  d-flex justify-content-center">
+        <div class="col-11 rounded bg-white">
+            <div class="d-flex bd-highlight">
+                <div class="p-2 w-100 bd-highlight">
+                    <h4 class="title-contact mt-2">Obra Fechada</h4>
+                </div>
+                <div class="p-2 flex-shrink-1 bd-highlight">
+                    <button class="btn btn-sm btn-light" data-toggle="collapse"  aria-expanded="true" aria-controls="content-closedwork" data-target="#content-negociacao">
+                        @if ($data->list != "requestBudget") Abrir  @else Fechar @endif
+                    </button>
+                </div>
+            </div>
+
+            <div class="row collapse @if ($data->list != "closedwork") nada  @else show @endif" id="content-closedwork">
+                <section class="tasks">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card widget-todo">
+                                <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                                    <h4 class="card-title d-flex">
+                                        <i class="bx bx-check font-medium-5 pl-25 pr-75"></i>CheckList Obra Fechada
+                                    </h4>
+                                </div>
+                                <div class="card-body px-0 py-1">
+                                    <table class="table table-borderless">
+                                        <tbody>
+
+                                            @for($i = 0; $i < count($checklistItems_closedwork); $i++)
+                                                <tr>
+                                                    <th>
+                                                        <div class="checkbox checkbox-shadow">
+                                                        <input type="checkbox" class="form-check-input mx-1 checkbox-checklist_closedwork" id="checkbox-checklist-{{$checklistItems_closedwork[$i]->id}}" data-id="{{$checklistItems_closedwork[$i]->id}}"
+                                                            @for($x = 0; $x < count($checklistContacts_closedwork); $x++)
+                                                                @if ($checklistContacts_closedwork[$x]->checklistItem_id === $checklistItems_closedwork[$i]->id)
+                                                                    @if ($checklistContacts_closedwork[$x]->status == true) checked @endif
+                                                                @endif
+                                                            @endfor
+                                                        >
+                                                    </th>
+                                                    <td><span class="widget-todo-title ml-50 mt-2
+
+                                                        @for($x = 0; $x < count($checklistContacts_closedwork); $x++)
+                                                            @if ($checklistContacts_closedwork[$x]->checklistItem_id === $checklistItems_closedwork[$i]->id)
+                                                                @if ($checklistContacts_closedwork[$x]->status == true) text-riscadinho @endif
+                                                            @endif
+                                                        @endfor"
+                                                        id="text-checklist-{{$checklistItems_closedwork[$i]->id}}"
+                                                        >{{$checklistItems_closedwork[$i]->text}}</span></td>
+                                                    <td id="date-checklist-{{$checklistItems_closedwork[$i]->id}}">
+                                                        @for($x = 0; $x < count($checklistContacts_closedwork); $x++)
+                                                            @if ($checklistContacts_closedwork[$x]->checklistItem_id === $checklistItems_closedwork[$i]->id)
+                                                                @if ($checklistContacts_closedwork[$x]->status == true) <small class="text-muted">{{ date('d/m/Y', strtotime($checklistContacts_closedwork[$x]->date))}}</small> @endif
+                                                            @endif
+                                                        @endfor
+                                                    </td>
+                                                    <td id="user_checklist-{{$checklistItems_closedwork[$i]->id}}">
+                                                        @for($x = 0; $x < count($checklistContacts_closedwork); $x++)
+                                                            @if ($checklistContacts_closedwork[$x]->checklistItem_id === $checklistItems_closedwork[$i]->id)
+                                                                @if ($checklistContacts_closedwork[$x]->status == true)
+                                                                    <div class="avatar bg-warning me-3">
+                                                                        <span class="avatar-content">{{getFirstLetterNamesIdUser($checklistContacts_closedwork[$x]->user_id)}}</span>
+                                                                    </div>
+                                                                @endif
+                                                            @endif
+                                                        @endfor
+                                                    </td>
+                                                    @for($x = 0; $x < count($checklistContacts_closedwork); $x++)
+                                                        @if ($checklistContacts_closedwork[$x]->checklistItem_id === $checklistItems_closedwork[$i]->id)
+                                                            @if ($checklistContacts_closedwork[$x]->status == true)
+                                                            <td id="td-close-btn-{{$checklistContacts_closedwork[$x]->checklistItem_id}}">
+                                                                <form class="form-delete-checklistItem" name="form-delete-checklistItem" action="{{route('comercial.contato.checklistDestroy')}}" method="post">
+                                                                    @csrf
+                                                                    <input type="hidden" id="checklistId" name="checklistId" value="{{$checklistContacts_closedwork[$x]->id}}">
+                                                                    <input type="hidden" id="checklistPos-{{$checklistContacts_closedwork[$x]->id}}" name="checklistPos" value="{{$checklistContacts_closedwork[$x]->checklistItem_id}}">
+                                                                    <button type="submit" id="submitForm" data-id="{{$checklistContacts_closedwork[$x]->id}}" class="btn btn-sm btn-danger">X</button>
+                                                                </form>
+                                                            </td>
+                                                            @endif
+                                                        @endif
+                                                    @endfor
+                                                </tr>
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="checklistInfo-closedword-{{$checklistItems_closedwork[$i]->id}}" tabindex="-1" aria-labelledby="checklistInfoLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-sm shadow mt-5">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Atribuir</h5>
+                                                        <button type="button" id="closeItem{{$checklistItems_closedwork[$i]->id}}" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-row">
+                                                                <div class="col">
+                                                                  {{-- <input type="text" class="form-control" placeholder="First name"> --}}
+                                                                  <label for="date-event-cw-{{$checklistItems_closedwork[$i]->id}}">Dia conclusão da etapa*</label>
+                                                                  <input type="date" class="form-control" name="date-event-cw" id="date-event-cw-{{$checklistItems_closedwork[$i]->id}}" required>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <label for="date-event-{{$checklistItems_closedwork[$i]->id}}">Responsável</label>
+                                                                    <select class="form-control" id="user-event-cw-{{$checklistItems_closedwork[$i]->id}}">
+                                                                        @foreach ($allUsers as $user)
+                                                                            <option value="{{$user->id}}">{{$user->name}}</option>
+                                                                        @endforeach
+                                                                      </select>
+                                                                    <input type="hidden" name="checklist_id_event-cw-{{$checklistItems_closedwork[$i]->id}}" id="checklist_id_event-cw-{{$checklistItems_closedwork[$i]->id}}" value="{{$checklistItems_closedwork[$i]->id}}">
+                                                                    <input type="hidden" name="contact_id_event-cw-{{$checklistItems_closedwork[$i]->id}}" id="contact_id_event-cw-{{$checklistItems_closedwork[$i]->id}}" value="{{$data->id}}">
+                                                                </div>
+                                                              </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                        <button type="button" id="btn_envia_request_checklist-cw-" class="btn btn-primary btn_envia_event_checklist-cw">Marcar como concluido</button>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            @endfor
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    @endif
+
 
     <div class="row opções mt-2  d-flex justify-content-center">
         <div class="col-11 rounded bg-transparent">
@@ -504,30 +668,36 @@
                     <button class="btn btn-success px-2 btn-sm" id="btn-fazer-orcamento">Orçamento <span class="fa-fw select-all fas"></span></button>
                 </div>
                 @break
-                @case("requestBudget")
+            @case("requestBudget")
                     <div class="col-11 d-flex justify-content-end mt-3">
                         <button class="btn btn-success px-2 btn-sm" id="btn-mover-apresentado">Mover para Apresentado</button>
                     </div>
                 @break
-                @case('budgetSent')
+            @case('budgetSent')
                     <div class="col-11 d-flex justify-content-end mt-3">
                         <button class="btn btn-primary px-2 btn-sm mx-2" id="btn-move-recontact">Mover para Recontactar</button>
                         <button class="btn btn-success px-2 btn-sm" id="btn-mover-negociacao">Mover para Negociação</button>
                     </div>
                 @break
-                @case('recontact')
+            @case('recontact')
                     <div class="col-11 d-flex justify-content-end mt-3">
                         <button class="btn btn-primary px-2 btn-sm mx-2" id="btn-mover-apresentado">Mover para Apresentado</button>
                         <button class="btn btn-success px-2 btn-sm" id="btn-mover-negociacao">Mover para Negociação</button>
                     </div>
                 @break
-                @case('negotiation')
+            @case('negotiation')
                 <div class="col-11 d-flex justify-content-end mt-3">
                     <button class="btn btn-primary px-2 btn-sm mx-2" id="btn-move-recontact">Mover para Recontactar</button>
                     <button class="btn btn-primary px-2 btn-sm mx-2" id="btn-mover-apresentado">Mover para Apresentado</button>
+                    <button class="btn btn-primary px-2 btn-sm mx-2" id="btn-mover-closedwork">Mover para Obra Fechada</button>
+
+                </div>
+                @break
+            @case('closedwork')
+                <div class="col-11 d-flex justify-content-end mt-3">
                     <a href="{{route('comercial.client.new', ['contact_id'=>$data->id, 'checkContact' => true])}}" class="btn btn-success px-2 btn-sm" id="btn-mover-fechado_retirar">Mover para Fechado</a>
                 </div>
-            @break
+                @break
 
             @default
 
@@ -595,15 +765,6 @@
                             $(".btn-save-name").remove();
                             $("#btn-save-name").remove();
                             contSalvar = false;
-                            Toastify({
-                                text: res.message,
-                                duration: 3000,
-                                close: true,
-                                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                            }).showToast();
-
-                            console.log(res);
-
                             idContact = null;
                             valordigitado = null;
                             valorDb = null;
@@ -666,30 +827,25 @@
         $(".checkbox-checklist").click(function(){
             var checklistId = $(this).attr('data-id');
             // console.log(checklistId);
-
             //exibe a modal
             $('#checklistInfo'+checklistId).modal('show');
             $(".btn_envia_event_checklist").attr('id', 'btn_envia_request_checklist'+checklistId);
-
             // $('btn_envia_request_checklist'+checklistId).click(function(){
             $(document).on('click','#btn_envia_request_checklist'+checklistId,function(){
-
                 $(this).attr("disabled", true);
                 $(this).html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div> Solicitando...');
-
                 var date_event = $("#date-event-"+checklistId).val();
                 var user_event = $("#user-event-"+checklistId).val();
                 var checklist_id_event = $("#checklist_id_event-"+checklistId).val();
                 var contact_id_event = $("#contact_id_event-"+checklistId).val();
+                var checklistGroup_id = 1;
 
                 console.log(checklist_id_event);
-
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-
                 $.ajax({
                     type: "post",
                     url: "{{ route('comercial.contato.checklistStore') }}",
@@ -697,7 +853,8 @@
                         date_event:date_event,
                         user_event:user_event,
                         contact_id_event:contact_id_event,
-                        checklist_id_event:checklist_id_event
+                        checklist_id_event:checklist_id_event,
+                        checklistGroup_id:checklistGroup_id
                     },
                     dataType: "json",
                     success: function(res) {
@@ -724,9 +881,131 @@
                         }
                     }
                 });
+            });
+        });
 
+        $(".checkbox-checklist_closedwork").click(function(event){
+            var checklistId = $(this).attr('data-id');
+            console.log(checklistId);
+
+            if( $(this).is(":checked") == false){
+                console.log('este checkbox esta ativo');
+                $( this ).attr( 'checked', true );
+
+            }else{
+                //exibe a modal
+                $('#checklistInfo-closedword-'+checklistId).modal('show');
+                $(".btn_envia_event_checklist-cw").attr('id', 'btn_envia_request_checklist-cw-'+checklistId);
+            }
+
+
+            // $('btn_envia_request_checklist'+checklistId).click(function(){
+
+            $(document).on('click','#btn_envia_request_checklist-cw-'+checklistId,function(e){
+
+                $(this).attr("disabled", true);
+                $(this).html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div> Marcando...');
+
+                var date_event = $("#date-event-cw-"+checklistId).val();
+                var user_event = $("#user-event-cw-"+checklistId).val();
+                var checklist_id_event = $("#checklist_id_event-cw-"+checklistId).val();
+                var contact_id_event = $("#contact_id_event-cw-"+checklistId).val();
+                var checklistGroup_id = 2;
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('comercial.contato.checklistStore') }}",
+                    data: {
+                        date_event:date_event,
+                        user_event:user_event,
+                        contact_id_event:contact_id_event,
+                        checklist_id_event:checklist_id_event,
+                        checklistGroup_id:checklistGroup_id
+                    },
+                    dataType: "json",
+                    success: function(res) {
+                        $("#text-checklist-"+checklistId).addClass('text-riscadinho');
+                        $("#date-checklist-"+checklistId).html('<small class="text-muted">'+date_event+'</small>');
+                        $('#checklistInfo-closedword-'+checklistId).modal('hide');
+                        $('#view-contact').modal('show');
+                        if(res.success){
+                            console.log(res);
+                            Toastify({
+                                text: res.message,
+                                duration: 3000,
+                                close: true,
+                                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                            }).showToast();
+                            console.log(res);
+                        }else{
+                            Toastify({
+                                text: res.message,
+                                duration: 3000,
+                                close: true,
+                                backgroundColor: "linear-gradient(to right, #de1d2d, #8c0712)",
+                            }).showToast();
+                        }
+                    }
+                });
+                e.stopPropagation();
             });
 
+        });
+
+        // $(document).on('submit','form[name="form-delete-checklistItem"]',function(event) {
+        $(document).on('click','#submitForm', function(event) {
+            event.preventDefault();
+
+            var dataId = $(this).attr('data-id');
+
+            // console.log('clicou me salvar');
+            $(this).attr("disabled", true);
+
+            var checklistId = $("#checklistId").val();
+            var checklistPos = $('#checklistPos-'+dataId).val();
+
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('comercial.contato.checklistDestroy') }}",
+                    data: {
+                        checklistId:dataId
+                    },
+                    dataType: "json",
+                    success: function(res) {
+                        // $("#user_checklist-"+res.checklist[dataId].checklistItem_id);
+                        if(res.success){
+                            console.log(checklistPos);
+                            $("#user_checklist-"+checklistPos).empty();
+                            $("#date-checklist-"+checklistPos).empty();
+                            $("#text-checklist-"+checklistPos).removeClass('text-riscadinho');
+                            $("#checkbox-checklist-"+checklistPos).prop("checked", false);
+                            // $('#checkbox-checklist-').val($("#checkbox-checklist-").is(':checked', false));
+                            $("#td-close-btn-"+checklistPos).remove();
+                        }else{
+                            Toastify({
+                                text: res.message,
+                                duration: 3000,
+                                close: true,
+                                backgroundColor: "linear-gradient(to right, #de1d2d, #8c0712)",
+                            }).showToast();
+                        }
+                    }
+                });
+
+            event.stopPropagation();
         });
 
         //desativar clientes
@@ -739,38 +1018,87 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-        });
+            });
 
-        $.ajax({
-            type: "post",
-            url: "{{ route('comercial.contato.toFile') }}",
-            data: {
-                contactId:contactId,
-            },
-            dataType: "json",
-            success: function(res) {
-                $('#view-contact').modal('hide');
-                $("#"+contactId).remove();
+            $.ajax({
+                type: "post",
+                url: "{{ route('comercial.contato.toFile') }}",
+                data: {
+                    contactId:contactId,
+                },
+                dataType: "json",
+                success: function(res) {
+                    $('#view-contact').modal('hide');
+                    $("#"+contactId).remove();
 
-                if(res.success){
-                    Toastify({
-                        text: res.message,
-                        duration: 3000,
-                        close: true,
-                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                    }).showToast();
+                    if(res.success){
+                        Toastify({
+                            text: res.message,
+                            duration: 3000,
+                            close: true,
+                            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                        }).showToast();
 
-                }else{
-                    Toastify({
-                        text: res.message,
-                        duration: 3000,
-                        close: true,
-                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                    }).showToast();
+                    }else{
+                        Toastify({
+                            text: res.message,
+                            duration: 3000,
+                            close: true,
+                            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                        }).showToast();
 
+                    }
                 }
-            }
+            });
+
         });
+
+        $('#sendFormPayment').click(function (e) {
+            e.preventDefault();
+            $("#sendFormPayment").html('<span class="spinner-border" role="status" aria-hidden="true"></span>');
+            var conteudoFormPayment = $('#contentFormPayment').val();
+            var contact_id = $('#contact_id_formPayment').val();
+
+            // console.log(conteudoFormPayment);
+
+            $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('comercial.contato.addFormPayments') }}",
+                    data: {
+                        conteudoFormPayment:conteudoFormPayment,
+                        contact_id:contact_id
+                    },
+                    dataType: "json",
+                    success: function(res) {
+                        if(res.success){
+                            // console.log(res);
+                            Toastify({
+                                text: res.message,
+                                duration: 3000,
+                                close: true,
+                                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                            }).showToast();
+
+                            $("#sendFormPayment").html('Atualizar');
+                            $("#sendFormPayment").removeClass('btn-primary').addClass('btn-warning');
+
+                        }else{
+                            Toastify({
+                                text: res.message,
+                                duration: 3000,
+                                close: true,
+                                backgroundColor: "linear-gradient(to right, #de1d2d, #8c0712)",
+                            }).showToast();
+                            console.log(res);
+                        }
+                    }
+                });
 
         });
 
