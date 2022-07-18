@@ -77,6 +77,7 @@
 
         <section class="lists-container">
 
+            {{-- Contacts --}}
             <div class="list">
 
                 <h3 class="list-title">Contato / Lead
@@ -134,7 +135,6 @@
                 </div>
             </div>
 
-
             {{-- Negociação --}}
             <div class="list">
 
@@ -176,8 +176,19 @@
 
         </section>
     </section>
+    <!--Modal view Edit contact -->
+    <div class="modal fade text-left rounded" id="view-contact-edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2"
+        aria-hidden="true">
+        <div class="modal-dialog rounded modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body rounded" style="background-color: #ffff" id="content-view-edit-contact">
+
+                </div>
+            </div>
+        </div>
+    </div>
     <!--Modal view contact -->
-    <div class="modal fade text-left rounded" id="view-contact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1"
+    <div class="modal fade text-left rounded" id="view-contact" tabindex="-2" role="dialog" aria-labelledby="myModalLabel1"
         aria-hidden="true">
         <div class="modal-dialog rounded modal-lg" role="document">
             <div class="modal-content">
@@ -314,7 +325,6 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-
                                         <div id="errorform"
                                             class="alert alert-light-danger color-danger alert-dismissible fade show d-none"
                                             role="alert"><i class="bi bi-exclamation-circle"></i>
@@ -322,18 +332,11 @@
                                                 aria-label="Close"></button>
                                         </div>
                                         <div class="row" id="linhaEsconder">
-                                            <div class="col-md-12 col-12">
+                                            <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="first-name-column">Nome</label>
                                                     <input type="text" id="name" class="form-control border-2"
                                                         placeholder="" name="name" selected required>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-12">
-                                                <div class="form-group">
-                                                    <label for="city">Cidade</label>
-                                                    <input type="text" id="city-column" class="form-control border-2"
-                                                        placeholder="" name="city" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-12">
@@ -343,7 +346,15 @@
                                                         name="cellphone" placeholder="" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12 col-12">
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
+                                                    <label for="city">Cidade</label>
+                                                    <input type="text" id="city-column" class="form-control border-2"
+                                                        placeholder="" name="city" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="email">Email</label>
                                                     <input type="email" id="email" class="form-control border-2"
@@ -353,29 +364,53 @@
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
                                                     <label for="origin">Origem do contato:</label>
-                                                    <select name="origin" class="form-select" id="basicSelect"
-                                                        required>
-                                                        @forelse ($campanhas as $campanha )
-                                                            <option value="{{$campanha->text}}">{{$campanha->text}}</option>
-                                                        @empty
-                                                            <option value="Usuario comun">Usuário Comum</option>
-                                                        @endforelse
-                                                    </select>
+                                                    <div class="input-group">
+                                                        <label class="input-group-text"
+                                                                for="basicSelect">Campanhas</label>
+                                                        <select name="origin" class="form-select" id="basicSelect"
+                                                            required>
+                                                            @forelse ($campanhas as $campanha )
+                                                                <option value="{{$campanha->text}}">{{$campanha->text}}</option>
+                                                            @empty
+                                                                <option value="Usuario comun">Usuário Comum</option>
+                                                            @endforelse
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-12">
                                                 <div class="form-group">
-                                                    <label for="responsible_id">Vendedor:</label>
+                                                    <label for="responsible_id">Responsável:</label>
                                                     <div class="input-group mb-3">
                                                         <label class="input-group-text"
                                                             for="responsible_id">Usuários</label>
                                                         <select required name="responsible_id" class="form-select"
-                                                            id="responsible_id">]
-                                                            <option selected>Escolha:</option>
+                                                            id="responsible_id">
+                                                            <option selected value="{{ $authUser->name }}">{{ $authUser->name }}</option>
                                                             @foreach ($allUsers as $user)
                                                                 <option value="{{ $user->id }}">{{ $user->name }}
                                                                 </option>
                                                             @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
+                                                    <label for="seller">Vendedor:</label>
+                                                    <input type="text" name="seller" id="seller" class="form-control border-2" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-12">
+                                                <div class="form-group">
+                                                    <label for="responsible_id">Escritório:</label>
+                                                    <div class="input-group mb-3">
+                                                        <label class="input-group-text"
+                                                            for="responsible_id">Unidade:</label>
+                                                        <select required name="responsibleOffice" class="form-select" id="responsible_id">
+                                                            <option >Escolha:</option>
+                                                            <option selected value="Rio Preto">São José do Rio Preto (Matris)</option>
+                                                            <option value="Ouroeste">Ouroeste</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -421,7 +456,7 @@ function reloadContacts() {
             console.log(res.contacts);
             $('#loading-contacts-modal').addClass('d-none');
             for(var i = 0; i < res.contacts.length; i++){
-                $('#list-contact').append("<div id='"+res.contacts[i].id+"' class='card-trello-contact' data_id='"+res.contacts[i].id+"'>"+ res.contacts[i].name +"</div>");
+                $('#list-contact').append("<div id='"+res.contacts[i].id+"' class='card-trello-contact' data_id='"+res.contacts[i].id+"'><span id='card-name-"+res.contacts[i].id+"'>"+ res.contacts[i].name +"</span></div>");
                 $("#"+res.contacts[i].id).prepend("<div id='list-tag-"+res.contacts[i].id+"' class='w-100 mb-2'></div>");
                 $('#'+res.contacts[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.contacts[i].id+'"></div>');
 
@@ -458,7 +493,7 @@ function reloadBudgetSent(){
             for(var i = 0; i < res.budgetSent.length; i++){
                 // console.log(res.contacts[i].name);
                 // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
-                $('#list-presented').append("<div id='"+res.budgetSent[i].id+"' class='card-trello-budgetsent' data_id='"+res.budgetSent[i].id+"'>"+ res.budgetSent[i].name +"</div>");
+                $('#list-presented').append("<div id='"+res.budgetSent[i].id+"' class='card-trello-budgetsent' data_id='"+res.budgetSent[i].id+"'><span id='card-name-"+res.budgetSent[i].id+"'>"+ res.budgetSent[i].name +"</span></div>");
                 $("#"+res.budgetSent[i].id).prepend("<div id='list-tag-"+res.budgetSent[i].id+"' class='w-100 mb-2'></div>");
                 $('#'+res.budgetSent[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.budgetSent[i].id+'"></div>');
 
@@ -499,7 +534,7 @@ function reloadRecontact(){
             for(var i = 0; i < res.recontact.length; i++){
                 // console.log(res.contacts[i].name);
                 // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
-                $('#list-recontact').append("<div id='"+res.recontact[i].id+"' class='card-trello-recontact' data_id='"+res.recontact[i].id+"'>"+ res.recontact[i].name +"</div>");
+                $('#list-recontact').append("<div id='"+res.recontact[i].id+"' class='card-trello-recontact' data_id='"+res.recontact[i].id+"'><span id='card-name-"+res.recontact[i].id+"'>"+ res.recontact[i].name +"</span></div>");
                 $("#"+res.recontact[i].id).prepend("<div id='list-tag-"+res.recontact[i].id+"' class='w-100 mb-2'></div>");
                 $('#'+res.recontact[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.recontact[i].id+'"></div>');
 
@@ -540,7 +575,7 @@ function reloadBudgets() {
             for(var i = 0; i < res.budgets.length; i++){
                 // console.log(res.contacts[i].name);
                 // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
-                $('#list-budget').append("<div id='"+res.budgets[i].id+"' class='card-trello-budget' data_id='"+res.budgets[i].id+"'>"+ res.budgets[i].name +"</div>");
+                $('#list-budget').append("<div id='"+res.budgets[i].id+"' class='card-trello-budget' data_id='"+res.budgets[i].id+"'><span id='card-name-"+res.budgets[i].id+"'>"+ res.budgets[i].name +"</span></div>");
                 $("#"+res.budgets[i].id).prepend("<div id='list-tag-"+res.budgets[i].id+"' class='w-100 mb-2'></div>");
                 $('#'+res.budgets[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.budgets[i].id+'"></div>');
 
@@ -580,7 +615,7 @@ function reloadNegotiation() {
             for(var i = 0; i < res.negotiations.length; i++){
                 // console.log(res.contacts[i].name);
                 // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
-                $('#list-negotiation').append("<div id='"+res.negotiations[i].id+"' class='card-trello-negotiation' data_id='"+res.negotiations[i].id+"'>"+ res.negotiations[i].name +"</div>");
+                $('#list-negotiation').append("<div id='"+res.negotiations[i].id+"' class='card-trello-negotiation' data_id='"+res.negotiations[i].id+"'><span id='card-name-"+res.negotiations[i].id+"'>"+ res.negotiations[i].name +"</span></div>");
                 $("#"+res.negotiations[i].id).prepend("<div id='list-tag-"+res.negotiations[i].id+"' class='w-100 mb-2'></div>");
                 $('#'+res.negotiations[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.negotiations[i].id+'"></div>');
 
@@ -620,7 +655,7 @@ function reloadclosedwork() {
             for(var i = 0; i < res.closedwork.length; i++){
                 // console.log(res.contacts[i].name);
                 // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
-                $('#list-closedwork').append("<div id='"+res.closedwork[i].id+"' class='card-trello-closedwork' data_id='"+res.closedwork[i].id+"'>"+ res.closedwork[i].name +"</div>");
+                $('#list-closedwork').append("<div id='"+res.closedwork[i].id+"' class='card-trello-closedwork' data_id='"+res.closedwork[i].id+"'><span id='card-name-"+res.closedwork[i].id+"'>"+ res.closedwork[i].name +"</span></div>");
                 $("#"+res.closedwork[i].id).prepend("<div id='list-tag-"+res.closedwork[i].id+"' class='w-100 mb-2'></div>");
                 $('#'+res.closedwork[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.closedwork[i].id+'"></div>');
 
@@ -639,7 +674,6 @@ function reloadclosedwork() {
         }
     });
 }
-
 
 function reloadSaleCompleted() {
     $(".card-trello-salecompleted").remove();
@@ -661,7 +695,7 @@ function reloadSaleCompleted() {
             for(var i = 0; i < res.salecompleted.length; i++){
                 // console.log(res.contacts[i].name);
                 // $("#list-items").append("<div id='contact_id' class='card-trello' data_id='" + res.contacts.i.id + "'>" + res.contacts.i.name + "</div>");
-                $('#list-SaleCompleted').append("<div id='"+res.salecompleted[i].id+"' class='card-trello-salecompleted' data_id='"+res.salecompleted[i].id+"'>"+ res.salecompleted[i].name +"</div>");
+                $('#list-SaleCompleted').append("<div id='"+res.salecompleted[i].id+"' class='card-trello-salecompleted' data_id='"+res.salecompleted[i].id+"'><span id='card-name-"+res.salecompleted[i].id+"'>"+ res.salecompleted[i].name +"</span></div>");
                 $("#"+res.salecompleted[i].id).prepend("<div id='list-tag-"+res.salecompleted[i].id+"' class='w-100 mb-2'></div>");
                 $('#'+res.salecompleted[i].id).append('<div class="d-flex flex-row mt-2" id="content-info-card-'+res.salecompleted[i].id+'"></div>');
 
@@ -737,6 +771,33 @@ function openCard(dataId){
     });
 }
 
+function openEditContact(dataId) {
+    // $('#content-view-edit-contact').html('<span class="align-middle w-100 d-flex justify-content-center" id="spinner-contacts"><img src="{{asset("vendors/svg-loaders/oval.svg")}}" class="me-4 align-middle text-center my-5" style="width: 5rem" alt="audio"></span>');
+
+    $('#view-contact').modal('hide');
+    $('#view-contact-edit').modal('show');
+    // console.log(dataId);
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        type: "post",
+        url: "{{ route('comercial.contato.edit') }}",
+        data: {
+            items: dataId
+        },
+        dataType: "json",
+        success: function(res) {
+            $('#spinner-contacts').addClass('d-none');
+            console.log(res);
+            $('#content-view-edit-contact').html(res.html);
+        },
+    });
+}
+
 $(document).ready(function(){
 
     //carregas todas as listas
@@ -759,6 +820,13 @@ $(document).ready(function(){
         closeSearch();
 
         openCard(dataId);
+    });
+
+
+    $(document).on('click', '#editar_contato', function() {
+        dataId = $(this).attr('data-id');
+
+        openEditContact(dataId);
     });
 
     //envia orçamento
@@ -831,6 +899,40 @@ $(document).ready(function(){
 
                 Toastify({
                     text: "Contato Salvo com sucesso",
+                    duration: 3000,
+                    close: true,
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                }).showToast();
+            }
+        });
+    });
+
+    // função para salvar um novo contato em banco
+    // $('form[name="form-edit-contato"]').submit(function(event) {
+    $(document).on('submit','form[name="form-edit-contato"]',function(event) {
+        event.preventDefault();
+        $("#btn-save").html('Salvando Edições...');
+        $("#btn-save").attr("disabled", true);
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('comercial.contato.update') }}",
+            data: $(this).serialize(),
+            dataType: "json",
+            success: function(res) {
+                console.log(res);
+                $("#formEditContact").trigger("reset");
+                $("#btn-save").html('Salvar Contato');
+                $("#btn-save").attr("disabled", false);
+                var name_card_id = '#card-name-'+res.contact_id;
+                $(name_card_id).html(res.name);
+                openCard(res.contact_id);
+
+                // console.log(name_card_id);
+
+                $('#view-contact-edit').modal('hide');
+                Toastify({
+                    text: res.message,
                     duration: 3000,
                     close: true,
                     backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
@@ -988,6 +1090,7 @@ $(document).ready(function(){
                 reloadNegotiation();
                 reloadBudgetSent();
                 reloadRecontact();
+                reloadclosedwork();
             }
         });
 

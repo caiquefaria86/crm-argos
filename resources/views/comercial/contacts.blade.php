@@ -68,23 +68,25 @@
             </div>
         </div>
             <div class="col-10 col-sm-8  mt-1 mx-2 rounded bg-white">
-                <div class="row my-2">
+                <div class="row my-2 py-3">
                     <div class="col-12">
-                        <h4 class="title-contact">
-                            <span class="fa-fw select-all fas"></span>
-                            Informações do Contato:
-                        </h4>
+                        <div class="col-12">
+                            <h4 class="title-contact">
+                                <span class="fa-fw select-all fas"></span>
+                                Informações do Contato: <small class="text-muted">{{dateFriendly($data->created_at)}}</small>
+                            </h4>
+                        </div>
                         {{-- <hr> --}}
                         <div class="row info-contatos mt-2">
                             <div class="col-6">
-                                <p>Cidade: {{$data->city}}</p>
-                                <p>Email: {{$data->email}}</p>
-                                <p>Origem: {{$data->origin}}</p>
+                                <p><small class="text-muted">Cidade:</small> {{$data->city}}</p>
+                                <p><small class="text-muted">Email:</small> {{$data->email}}</p>
+                                <p><small class="text-muted">Origem:</small> {{$data->origin}}</p>
                             </div>
                             <div class="col-6">
-                                <p>Contato: {{$data->cellphone}}</p>
-                                <p>Escritório: {{$data->responsibleOffice}}</p>
-                                <p>Entrada: {{dateFriendly($data->created_at)}}</p>
+                                <p><small class="text-muted">Contato:</small> {{$data->cellphone}}</p>
+                                <p><small class="text-muted">Escritório:</small> {{$data->responsibleOffice}}</p>
+                                <p><small class="text-muted">Vendedor:</small> {{$data->seller}}</p>
                             </div>
                         </div>
                     </div>
@@ -92,12 +94,15 @@
 
             </div>
             <div class="col-10 col-sm-3 mt-1 rounded  bg-white">
-               <div class="row my-2">
+               <div class="row my-2 py-3">
                     <div class="col-12">
                         <h4 class="title-contact"><span class="fa-fw select-all fas"></span> Opções</h4>
                         <div class="card-content m-0 p-0">
                             <div class="card-body m-0 p-0">
                                 <div class="list-group">
+                                        <button type="button" id="editar_contato" class="list-group-item list-group-item-action" data-id="{{$data->id}}">
+                                            <span class="fa-fw select-all fas"></span> Editar Contato
+                                        </button>
                                         <button class="list-group-item list-group-item-action dropdown-toggle" type="button" id="incluirPessoa"
                                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <span class="fa-fw select-all fas"></span> Incluir
@@ -127,7 +132,7 @@
             </div>
     </div>
     @if($data->list != "contacts")
-        <div class="row opções mt-2  d-flex justify-content-center">
+        <div class="row opções mt-2 py-3 d-flex justify-content-center">
             <div class="col-11 rounded bg-white">
                 <div class="d-flex bd-highlight">
                     <div class="p-2 w-100 bd-highlight">

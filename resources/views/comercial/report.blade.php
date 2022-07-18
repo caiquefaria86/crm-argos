@@ -28,6 +28,8 @@
                 {{$mes}} / {{$ano}}
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '08', 'ano'=> '2022'])}}">Agosto / 2022</a>
+                <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '07', 'ano'=> '2022'])}}">Julho / 2022</a>
                 <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '06', 'ano'=> '2022'])}}">Junho / 2022</a>
                 <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '05', 'ano'=> '2022'])}}">Maio / 2022</a>
                 <a class="dropdown-item" href="{{route('comercial.report', ['mes'=> '04', 'ano'=> '2022'])}}">Abril / 2022</a>
@@ -47,6 +49,7 @@
                                     <div class="col-md-4">
                                         <div class="stats-icon purple">
                                             <i class="iconly-boldShow"></i>
+                                            <span class="fa-fw select-all fas text-white"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -64,6 +67,7 @@
                                     <div class="col-md-4">
                                         <div class="stats-icon blue">
                                             <i class="iconly-boldProfile"></i>
+                                            <span class="fa-fw select-all fas text-white"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -81,6 +85,7 @@
                                     <div class="col-md-4">
                                         <div class="stats-icon green">
                                             <i class="iconly-boldAdd-User"></i>
+                                            <span class="fa-fw select-all fas text-white"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -98,6 +103,7 @@
                                     <div class="col-md-4">
                                         <div class="stats-icon red">
                                             <i class="iconly-boldBookmark"></i>
+                                            <span class="fa-fw select-all fas text-white"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-8">

@@ -6,6 +6,7 @@ use App\Models\Tag;
 use App\Models\User;
 use App\Models\Budget;
 use \App\Models\Contact;
+use App\Models\Campaign;
 use App\Models\Checklist;
 use Illuminate\Http\Request;
 use App\Models\ChecklistItems;
@@ -33,6 +34,21 @@ class ContactController extends Controller
         ]);
     }
 
+    public function painelAdmin()
+    {
+
+        $contacts = Contact::distinct()
+       ->where('status', true)
+       ->with('tags','comments')
+       ->get();
+
+    //    dd($contacts);
+
+        return view('admin.painelAdmin', [
+            'contacts' => $contacts
+        ]);
+    }
+
     public function store(Request $request)
     {
         // $cadastro['success'] = true;
@@ -48,11 +64,12 @@ class ContactController extends Controller
             $contact = new Contact();
             $contact->name = $data['name'];
             $contact->user_id = $user_id;
-            $contact->responsibleOffice = "Rio Preto";
+            $contact->responsibleOffice = $data['responsibleOffice'];
             $contact->city = $data['city'];
             $contact->cellphone = $data['cellphone'];
             $contact->email = $data['email'];
             $contact->origin = $data['origin'];
+            $contact->seller = $data['seller'];
             $contact->responsible_id = $data['responsible_id'];
 
             $contact->save();
@@ -147,6 +164,61 @@ class ContactController extends Controller
             'checklistItems_closedwork' => $checklistItems_closedwork,
             'uploadFiles'       =>$uploadFiles
         ));
+    }
+
+    public function edit(Request $request)
+    {
+
+        $contactId = $request->items;
+
+        $data = Contact::find($contactId);
+
+        $allUsers = User::all();
+        $campanhas = Campaign::all();
+
+        $viewRender = view('comercial.editContacts', [
+            'campanhas' => $campanhas,
+            'allUsers' => $allUsers,
+            'data'           => $data,
+            ])->render();
+
+        return response()->json(array(
+            'success'           => true,
+            'html'              => $viewRender,
+        ));
+    }
+
+    public function update(Request $request)
+    {
+        try {
+
+            $affected = DB::table('contacts')
+              ->where('id', $request['contact_id'])
+              ->update([
+                'name'          => $request['name'],
+                'cellphone'     => $request['cellphone'],
+                'city'          => $request['city'],
+                'email'         => $request['email'],
+                'origin'        => $request['origin'],
+                'seller'        => $request['seller'],
+                'responsibleOffice'        => $request['responsibleOffice'],
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message'=>'Contato editado com sucesso!',
+                'contact_id' => $request['contact_id'],
+                'name'      => $request['name']
+            ]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'success' => false,
+                'message'=>'Erro ao editar! - '.$th
+            ]);
+        }
+
     }
 
     public function updateDateRecontact(Request $request)
@@ -266,8 +338,6 @@ class ContactController extends Controller
 
         }
     }
-
-
 
     public function checklistStore(Request $request)
     {

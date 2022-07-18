@@ -55,6 +55,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::get('/campanha/nova', [CampaignController::class, 'create'])->name('campaign.new');
         Route::post('/campanha/store', [CampaignController::class, 'store'])->name('campaign.store');
         Route::delete('/campanha/{id}/destroy', [CampaignController::class, 'destroy'])->name('campaign.destroy');
+        Route::get('/painel', [ContactController::class, 'painelAdmin'])->name('painelAdmin');
     });
 
     Route::post('/notifications/reload', [NotificationController::class, 'notifications'])->name('notification.reload');
@@ -71,6 +72,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::post('/contato/arquivarContato',[ContactController::class, 'toFile'])->name('contato.toFile');
         //retorna os dados da modal de contato.
         Route::post('/contato/datamodal', [ContactController::class, 'dataModal'])->name('contato.datamodal');
+        Route::post('/contato/edit/contact', [ContactController::class, 'edit'])->name('contato.edit');
+        Route::post('/contato/update/contact', [ContactController::class, 'update'])->name('contato.update');
         Route::post('/solicitar/orcamento', [BudgetController::class, 'store'])->name('contato.budget.new');
         Route::post('/enviar/orcamento', [BudgetController::class, 'budgetSent'])->name('contato.budget.sent');
         Route::post('/contato/movecard', [ContactController::class, 'moveCard'])->name('contato.moveCard');
