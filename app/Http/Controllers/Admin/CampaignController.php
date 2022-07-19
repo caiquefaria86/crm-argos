@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Campaign;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class CampaignController extends Controller
@@ -54,6 +55,37 @@ class CampaignController extends Controller
         } catch (\Throwable $th) {
             Alert('Erro','Erro ao deletar do banco de dados', 'error');
             return redirect()->route('admin.campaign.index');
+        }
+    }
+
+    public function edit($campaign_id)
+    {
+
+        $campaign = Campaign::where('id', $campaign_id)->first();
+
+        // dd($campaign);
+
+        return view('admin.editCampaign',['campaign' => $campaign]);
+    }
+    public function update(Request $request)
+    {
+        try {
+
+            $affected = Campaign::where('id', $request['id'])
+                            ->update([
+                                'text' => $request['text'],
+                                'status' => $request['status'],
+                            ]);
+
+            Alert('Sucesso','Editado com sucesso!', 'success');
+            return redirect()->route('admin.campaign.index');
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            Alert('Erro','Erro ao editar! - '.$th, 'error');
+            return redirect()->route('admin.campaign.index');
+
         }
     }
 }

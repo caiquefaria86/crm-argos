@@ -48,7 +48,7 @@
                                                 @csrf
                                                 @method('delete')
 
-                                                <a href="#">
+                                                <a href="{{route('admin.campaign.edit',['campaign_id'=> $c->id])}}">
                                                     <i class="the-icon"><span class="fa-fw fa-1x pl-2 select-all fas"></span></i>
                                                 </a>
                                                 <button type="submit" class="btn btn-transparent">

@@ -53,7 +53,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::put('usuario/editarPermissoes', [UsersController::class, 'updatePermission'])->name('usuarios.updatePermission');
         Route::get('/campanhas', [CampaignController::class, 'index'])->name('campaign.index');
         Route::get('/campanha/nova', [CampaignController::class, 'create'])->name('campaign.new');
+        Route::get('/campanha/{campaign_id}/editar', [CampaignController::class, 'edit'])->name('campaign.edit');
         Route::post('/campanha/store', [CampaignController::class, 'store'])->name('campaign.store');
+        Route::post('/campanha/update', [CampaignController::class, 'update'])->name('campaign.update');
         Route::delete('/campanha/{id}/destroy', [CampaignController::class, 'destroy'])->name('campaign.destroy');
         Route::get('/painel', [ContactController::class, 'painelAdmin'])->name('painelAdmin');
     });

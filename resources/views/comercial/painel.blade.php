@@ -1061,39 +1061,50 @@ $(document).ready(function(){
     // btn-mover-closedwork
     $(document).on('click', '#btn-mover-closedwork', function(){
 
-        $("#btn-mover-negociacao").html('Movendo para Obra Fechada...');
-        $("#btn-mover-negociacao").attr("disabled", true);
-        $('#spinner-orcamento').removeClass('d-none');
+        var seguir = true;
+        if (!$("#checkbox-checklist-0").prop("checked") || !$("#checkbox-checklist-1").prop("checked") || $('#contentFormPayment').val() == "") {
+            Toastify({
+                text: "Tem Checklist ou campo obrigatório para passar para proxima etapa",
+                duration: 3000,
+                close: true,
+                backgroundColor: "linear-gradient(to right, #de1d2d, #8c0712)",
+            }).showToast();
+        }else{
+            // $("#checkbox-checklist-0").prop("checked", true);
 
-        // console.log("data-id - "+ dataId);
+            $("#btn-mover-negociacao").html('Movendo para Obra Fechada...');
+            $("#btn-mover-negociacao").attr("disabled", true);
+            $('#spinner-orcamento').removeClass('d-none');
 
-        $.ajax({
-            type: "POST",
-            url: "{{ route('comercial.contato.moveCard') }}",
-            data: {
-                contact_id: dataId,
-                destination: 'closedwork'
-            },
-            dataType: "json",
-            success: function(res) {
-                console.log(res.success);
-                $('#view-contact').modal('hide');
-                if (res.success) {
-                    Toastify({
-                        text: "Movido com sucesso",
-                        duration: 3000,
-                        close: true,
-                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
-                    }).showToast();
+            // console.log("data-id - "+ dataId);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('comercial.contato.moveCard') }}",
+                data: {
+                    contact_id: dataId,
+                    destination: 'closedwork'
+                },
+                dataType: "json",
+                success: function(res) {
+                    console.log(res.success);
+                    $('#view-contact').modal('hide');
+                    if (res.success) {
+                        Toastify({
+                            text: "Movido com sucesso",
+                            duration: 3000,
+                            close: true,
+                            backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                        }).showToast();
+                    }
+
+                    reloadNegotiation();
+                    reloadBudgetSent();
+                    reloadRecontact();
+                    reloadclosedwork();
                 }
-
-                reloadNegotiation();
-                reloadBudgetSent();
-                reloadRecontact();
-                reloadclosedwork();
-            }
-        });
-
+            });
+        }
     });
 
     // btn-mover-fechado
