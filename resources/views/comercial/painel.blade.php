@@ -386,7 +386,7 @@
                                                             for="responsible_id">Usuários</label>
                                                         <select required name="responsible_id" class="form-select"
                                                             id="responsible_id">
-                                                            <option selected value="{{ $authUser->name }}">{{ $authUser->name }}</option>
+                                                            <option selected value="{{ $authUser->id }}">{{ $authUser->name }}</option>
                                                             @foreach ($allUsers as $user)
                                                                 <option value="{{ $user->id }}">{{ $user->name }}
                                                                 </option>

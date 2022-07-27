@@ -7,15 +7,24 @@
 
     <a class="link-item btn-notifications" href="" id="{{$notif->id}}" data-id="{{$data->contact->id}}">
         <div class="link-item border-top border-bottom">
-            <p class="title-notification">
-                @if ($notif->type == "App\Notifications\CardTargetUser")
+            @if ($notif->type == "App\Notifications\CardTargetUser")
+                <p class="title-notification">
                     Você foi marcado em um Card
-                @endif
+                </p>
+                <p class="content-notification text-justify">
+                    O contato "{{$data->contact->name}}" agora faz parte de seus cards, clique para ver.
+                </p>
+            @endif
+            @if ($notif->type == "App\Notifications\MoveAutoToRecontact")
+            <p class="title-notification">
+                Um card foi movido automaticamente.
             </p>
-            {{-- Contato: Juvenir Alves dos santos, clique para acompanhar --}}
             <p class="content-notification text-justify">
-                O contato "{{$data->contact->name}}" agora faz parte de seus cards, clique para ver.
+                O "{{$data->contact->name}}" foi movido para recontactar, clique para ver.
             </p>
+        @endif
+            {{-- Contato: Juvenir Alves dos santos, clique para acompanhar --}}
+
             <p class="time-notification text-right px-2 d-flex justify-content-end">{{dateFriendly($notif->created_at)}}</p>
         </div>
     </a>
