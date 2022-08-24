@@ -59,7 +59,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::delete('/campanha/{id}/destroy', [CampaignController::class, 'destroy'])->name('campaign.destroy');
         Route::get('/contatos', [ContactController::class, 'painelAdmin'])->name('painelAdmin');
         Route::get('/painel', [ContactController::class, 'painelAllContacts'])->name('painelAllContacts');
-        Route::post('/reloadcontacts', [ComercialController::class, 'reloadContacts'])->name('painel.reloadcontacts');
+        Route::post('/reloadcontacts', [ComercialController::class, 'reloadContactsAdmin'])->name('painel.reloadcontacts');
     });
 
     Route::post('/notifications/reload', [NotificationController::class, 'notifications'])->name('notification.reload');
