@@ -19,7 +19,7 @@ class UsersController extends Controller
 
     public function index()
     {
-        $users = User::paginate(20);
+        $users = User::where('status', 1)->paginate(20);
 
         // dd($users);
         return view('admin.usuarios', [
@@ -112,6 +112,22 @@ class UsersController extends Controller
             return redirect()->route('admin.usuarios');
         }
         //  redirect()->back()->alert('success', 'Atualizado com Sucesso!');
+    }
+
+    public function destroy($id)
+    {
+
+        try {
+            //atualiza o status do client para não perder os dados ligado ao memso.
+            $user = User::where('id', $id)->update(['status' => 0]);
+
+            Alert('Sucesso','Usuário deletado com sucesso!', 'success');
+            return redirect()->back();
+
+        } catch (\Throwable $th) {
+            Alert('Erro','Erro ao deletar o usuário ' . $th , 'error');
+            return redirect()->back();
+        }
     }
 
 

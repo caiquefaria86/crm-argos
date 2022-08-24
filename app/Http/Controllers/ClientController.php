@@ -17,6 +17,7 @@ class ClientController extends Controller
     {
         $clients = Client::with('projects')
                             ->orderBy('created_at', 'desc')
+                            ->where('status', 1)
                             ->get();
 
         // dd($clients);
@@ -183,5 +184,22 @@ class ClientController extends Controller
             'contact_client'    => $contact_client,
             'uploadFiles'       => $uploadFiles
         ]);
+    }
+
+    public function destroy($id)
+    {
+        try {
+            // $tag = User::destroy($id);
+            //atualiza o status do usuario para não perder os dados ligado ao memso.
+            $user = Client::where('id', $id)->update(['status' => 0]);
+
+            Alert('Sucesso','Cliente deletado com sucesso!', 'success');
+            return redirect()->back();
+
+        } catch (\Throwable $th) {
+            Alert('Erro','Erro ao deletar o cliente! ' . $th , 'error');
+            return redirect()->back();
+        }
+
     }
 }

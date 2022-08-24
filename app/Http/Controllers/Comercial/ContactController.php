@@ -110,7 +110,7 @@ class ContactController extends Controller
 
         $budgetsContact = Budget::where('contact_id', $contactId);
 
-        $allUsers = User::all();
+        $allUsers = User::where('status', 1)->get();
 
         // é o 1 pois é o do comercial
         $checklistItems = ChecklistItems::where('checklistGroup_id', 1)
@@ -483,4 +483,20 @@ class ContactController extends Controller
 
     }
 
+    public function  painelAllContacts()
+    {
+        $contacts = Contact::where('status', true)->get();
+        $allUsers = User::all();
+        $userId = Auth::user()->id;
+        $authUser = Auth::user();
+        $campanhas = Campaign::all();
+
+        return view('admin.painel',[
+            'contacts' => $contacts,
+            'allUsers' => $allUsers,
+            'userId'   => $userId,
+            'authUser' => $authUser,
+            'campanhas'=> $campanhas
+        ]);
+    }
 }

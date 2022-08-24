@@ -33,6 +33,7 @@
                             <th>Telefone:</th>
                             <th>Cidade:</th>
                             <th>Email</th>
+                            <th>#</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,6 +46,25 @@
                                     <td>{{$client->cellphone}}</td>
                                     <td>{{$client->cidade}}</td>
                                     <td>{{$client->email}}</td>
+                                    <td>
+                                        <div class="in-line">
+
+                                            <form class="in-line" method="POST" action="{{route('comercial.client.destroy', ['id'=> $client->id])}}">
+                                                @csrf @method('delete')
+
+                                                <a href="#">
+                                                    <i class="the-icon"><span class="fa-fw fa-1x pl-2 select-all fas"></span></i>
+                                                </a>
+
+                                                <button type="submit" class="btn btn-transparent">
+                                                    <i class="the-icon"><span class="fa-fw fa-1x pl-2 select-all fas"></span></i>
+                                                </button>
+                                            </form>
+
+                                        </div>
+
+                                    </td>
+
                                 </tr>
                         @endforeach
                     </tbody>

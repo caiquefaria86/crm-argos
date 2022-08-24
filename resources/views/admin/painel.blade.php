@@ -1,7 +1,5 @@
 <x-app-layout>
 
-    <x-slot name="header">
-    </x-slot>
     @section('stylePersonalizado')
         <link rel="stylesheet" href="{{ asset('css/pages/board.css') }}">
         <link rel="stylesheet" href="{{ asset('vendors/toastify/toastify.css') }}">
@@ -53,6 +51,21 @@
             <button class="btn btn-sm border " id="btnReloadAll"><span class="fa-fw select-all fas mx-1 my-1"></span></button>
         </div>
     </form> --}}
+    <x-slot name="header">
+        <div class="row">
+            <div class="col-12 col-md-6 order-md-1 order-last">
+                <h4> Painel Geral | Todos os Cards</h4>
+            </div>
+            <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active" aria-current="page">Administração / Painel / Todos os Cards</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </x-slot>
+
         <div class="p-2 flex-grow-1 d-flex justify-content-end">
             <div class="input-group search">
                 <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
@@ -74,6 +87,7 @@
     </div>
 
     <section class="section">
+
 
         <section class="lists-container">
 
@@ -450,7 +464,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{route('comercial.painel.reloadcontacts')}}",
+                url: "{{route('admin.painel.reloadcontacts')}}",
                 dataType: "json",
                 success: function(res) {
                     console.log(res.contacts);
@@ -485,7 +499,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{route('comercial.painel.reloadcontacts')}}",
+                url: "{{route('admin.painel.reloadcontacts')}}",
                 dataType: "json",
                 success: function(res) {
                     // console.log(count(res.contacts));
@@ -526,7 +540,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{route('comercial.painel.reloadcontacts')}}",
+                url: "{{route('admin.painel.reloadcontacts')}}",
                 dataType: "json",
                 success: function(res) {
                     // console.log(count(res.contacts));
@@ -567,7 +581,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{route('comercial.painel.reloadcontacts')}}",
+                url: "{{route('admin.painel.reloadcontacts')}}",
                 dataType: "json",
                 success: function(res) {
                     // console.log(count(res.contacts));
@@ -607,7 +621,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{route('comercial.painel.reloadcontacts')}}",
+                url: "{{route('admin.painel.reloadcontacts')}}",
                 dataType: "json",
                 success: function(res) {
                     // console.log(count(res.contacts));
@@ -647,7 +661,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{route('comercial.painel.reloadcontacts')}}",
+                url: "{{route('admin.painel.reloadcontacts')}}",
                 dataType: "json",
                 success: function(res) {
                     // console.log(count(res.contacts));
@@ -687,7 +701,7 @@
 
             $.ajax({
                 type: "post",
-                url: "{{route('comercial.painel.reloadcontacts')}}",
+                url: "{{route('admin.painel.reloadcontacts')}}",
                 dataType: "json",
                 success: function(res) {
                     // console.log(count(res.contacts));

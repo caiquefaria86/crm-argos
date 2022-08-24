@@ -35,9 +35,12 @@ class CampaignController extends Controller
 
             Alert('Sucesso','Criado com sucesso', 'success');
             return redirect()->route('admin.campaign.index');
+
         } catch (\Exception $e){
+
             Alert('Erro','erro ao tentar salvar os dados no banco.', 'error');
             return redirect()->route('admin.campaign.index');
+
         }
 
     }

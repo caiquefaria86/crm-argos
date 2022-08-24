@@ -49,6 +49,9 @@
                 </a>
                 <ul class="submenu">
                     <li class="submenu-item ">
+                        <a href="{{route('admin.painelAllContacts')}}">Painel Geral</a>
+                    </li>
+                    <li class="submenu-item ">
                         <a href="{{route('admin.usuarios')}}">Usuários / Permissões</a>
                     </li>
                     <li class="submenu-item ">

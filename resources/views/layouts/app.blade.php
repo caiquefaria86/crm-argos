@@ -38,5 +38,6 @@
         <!-- Scripts -->
         @include('layouts.partials.scripts')
 
+        @yield('endScript')
     </body>
 </html>

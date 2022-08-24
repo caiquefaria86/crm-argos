@@ -27,9 +27,8 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(LoginResponse::class, new class implements LoginResponse {
             public function toResponse($request)
             {
-
                 //se o usuario for admin direciona para a pagina admin
-                if(Auth::check()){
+                if(Auth::check() AND Auth::user()->status){
                     return redirect(Auth::user()->redirect_to_page);
                 }
 

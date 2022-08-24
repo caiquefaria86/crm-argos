@@ -18,8 +18,11 @@ class ComercialAccess
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::check() AND Auth::User()->commercial OR Auth::User()->admin){
+        if(Auth::check() AND Auth::User()->status AND Auth::User()->commercial OR Auth::User()->admin){
             return $next($request);
+        }
+        if(!Auth::User()->status){
+            return redirect()->route("login");
         }
 
         // dd("você não é um administrador");

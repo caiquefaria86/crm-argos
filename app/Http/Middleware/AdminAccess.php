@@ -18,7 +18,7 @@ class AdminAccess
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::check() AND Auth::User()->admin){
+        if(Auth::check() AND Auth::User()->status AND Auth::User()->admin){
             return $next($request);
         }
 

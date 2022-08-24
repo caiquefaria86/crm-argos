@@ -24,7 +24,7 @@ class ComercialController extends Controller
     public function index(Request $request)
     {
         $contacts = Contact::where('status', true)->get();
-        $allUsers = User::all();
+        $allUsers = User::where('status', 1)->get();
         $userId = Auth::user()->id;
         $authUser = Auth::user();
         $campanhas = Campaign::all();
@@ -99,6 +99,51 @@ class ComercialController extends Controller
 
        return $contacts;
     }
+
+    public function reloadContactsAdmin()
+    {
+        $contacts = $this->queryContactListsAdmin('contacts');
+
+        $budgets = $this->queryContactListsAdmin('requestBudget');
+
+        $budgetsSents = $this->queryContactListsAdmin('budgetSent');
+
+        $recontact = $this->queryContactListsAdmin('recontact');
+
+        $negotiations = $this->queryContactListsAdmin('negotiation');
+
+        $closedwork = $this->queryContactListsAdmin('closedwork');
+
+        $salecompleted = $this->queryContactListsAdmin('salecompleted');
+
+        return response()->json([
+            'success'       => true,
+            'contacts'      => $contacts,
+            'budgets'       => $budgets,
+            'budgetSent'    => $budgetsSents,
+            'recontact'     => $recontact,
+            'negotiations'  => $negotiations,
+            'closedwork'    => $closedwork,
+            'salecompleted' => $salecompleted
+        ]);
+    }
+
+
+    static function queryContactListsAdmin($list)
+    {
+
+        $contacts = Contact::distinct()
+       ->where('list', $list)
+       ->where('status', true)
+       ->select('id','name')
+       ->with('tags','comments')
+       ->get();
+
+       return $contacts;
+    }
+
+
+
 
     static function queryContactListsFilter($list)
     {

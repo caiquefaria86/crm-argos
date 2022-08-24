@@ -28,13 +28,12 @@ use App\Http\Controllers\comercial\TargetPeopleController;
 Route::get('/', function () {
     return redirect('https://argoseng.com.br');
 });
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
-Route::middleware(['auth:sanctum', 'verified'])->get('/bemvindo', function () {
-    return view('bemvindo');
-})->name('bemvindo');
+    Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    Route::middleware(['auth:sanctum', 'verified'])->get('/bemvindo', function () {
+        return view('bemvindo');
+    })->name('bemvindo');
 
 
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
@@ -43,6 +42,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::get('/usuarios', [UsersController::class, 'index'])->name('usuarios');
         Route::get('/usuario/{id}/editar', [UsersController::class, 'edit'])->name('usuarios.edit');
         Route::put('/usuario/editar', [UsersController::class, 'update'])->name('usuarios.update');
+        Route::delete('/usuario/{id}/destroy', [UsersController::class, 'destroy'])->name('usuarios.destroy');
         Route::get('/usuario/{id}/permissoes', [UsersController::class, 'editPermission'])->name('usuarios.editPermission');
         Route::get('/etiquetas/grupos/', [TagController::class, 'allTags'])->name('tags.groups');
         Route::get('/etiquetas/nova', [TagController::class, 'newTag'])->name('tags.new');
@@ -57,7 +57,9 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::post('/campanha/store', [CampaignController::class, 'store'])->name('campaign.store');
         Route::post('/campanha/update', [CampaignController::class, 'update'])->name('campaign.update');
         Route::delete('/campanha/{id}/destroy', [CampaignController::class, 'destroy'])->name('campaign.destroy');
-        Route::get('/painel', [ContactController::class, 'painelAdmin'])->name('painelAdmin');
+        Route::get('/contatos', [ContactController::class, 'painelAdmin'])->name('painelAdmin');
+        Route::get('/painel', [ContactController::class, 'painelAllContacts'])->name('painelAllContacts');
+        Route::post('/reloadcontacts', [ComercialController::class, 'reloadContacts'])->name('painel.reloadcontacts');
     });
 
     Route::post('/notifications/reload', [NotificationController::class, 'notifications'])->name('notification.reload');
@@ -101,6 +103,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function(){
         Route::get('/cliente/{id}/ver', [ClientController::class, 'show'])->name('client.show');
         Route::get('/clientes/todos', [ClientController::class, 'index'])->name('client.index');
         Route::post('/cliente/new', [ClientController::class, 'store'])->name('client.store');
+        Route::delete('/cliente/{id}/destroy', [ClientController::class, 'destroy'])->name('client.destroy');
 
         Route::get('/projeto/{client_id}/novo', [ProjectController::class, 'projectNew'])->name('project.new');
         Route::post('/project/new', [ProjectController::class, 'store'])->name('project.store');

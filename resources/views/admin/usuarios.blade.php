@@ -46,10 +46,19 @@
                                     <td>{{$user['redirect_to_page']}}</td>
                                     <td>
                                         <div class="in-line">
-                                            <a href="{{route('admin.usuarios.edit', ['id'=> $user['id']])}}">
-                                                <i class="the-icon"><span class="fa-fw fa-1x pl-2 select-all fas"></span></i>
-                                            </a>
-                                            <i class="the-icon"><span class="fa-fw fa-1x pl-2 select-all fas"></span></i>
+
+                                            <form class="in-line" method="POST" action="{{route('admin.usuarios.destroy', ['id'=> $user->id])}}">
+                                                @csrf @method('delete')
+
+                                                <a href="{{route('admin.usuarios.edit', ['id'=> $user['id']])}}">
+                                                    <i class="the-icon"><span class="fa-fw fa-1x pl-2 select-all fas"></span></i>
+                                                </a>
+
+                                                <button type="submit" class="btn btn-transparent">
+                                                    <i class="the-icon"><span class="fa-fw fa-1x pl-2 select-all fas"></span></i>
+                                                </button>
+                                            </form>
+
                                         </div>
 
                                     </td>
